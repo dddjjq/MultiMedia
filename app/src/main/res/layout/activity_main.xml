@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_background"
+    tools:context="com.ktc.media.MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="66.7dp"
+        android:layout_marginTop="66.7dp"
+        android:text="@string/str_disk_list"
+        android:textColor="@color/disk_list_title_color"
+        android:textSize="36sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="150.7dp"
+        android:gravity="center_horizontal">
+
+        <com.ktc.media.view.PictureCardView
+            android:id="@+id/main_picture_card_view"
+            android:layout_width="412dp"
+            android:layout_height="198.7dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusDown="@id/main_music_card_view">
+
+        </com.ktc.media.view.PictureCardView>
+
+        <com.ktc.media.view.MusicCardView
+            android:id="@+id/main_music_card_view"
+            android:layout_width="215.3dp"
+            android:layout_height="205.3dp"
+            android:layout_below="@id/main_picture_card_view"
+            android:layout_marginTop="-12dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        </com.ktc.media.view.MusicCardView>
+
+        <com.ktc.media.view.VideoCardView
+            android:id="@+id/main_video_card_view"
+            android:layout_width="215.3dp"
+            android:layout_height="205.3dp"
+            android:layout_below="@id/main_picture_card_view"
+            android:layout_marginStart="-20dp"
+            android:layout_marginTop="-12dp"
+            android:layout_toEndOf="@id/main_music_card_view"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        </com.ktc.media.view.VideoCardView>
+
+        <com.ktc.media.view.DiskContainer
+            android:id="@+id/main_disk_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/main_picture_card_view"
+            android:scrollbars="none"
+            android:descendantFocusability="afterDescendants" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

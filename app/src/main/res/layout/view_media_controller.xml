@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/media_play_top_container"
+        android:layout_width="match_parent"
+        android:layout_height="66.7dp"
+        android:background="@drawable/media_play_top_background">
+
+        <TextView
+            android:id="@+id/media_play_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:textColor="@color/common_text_color"
+            android:textSize="24sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/media_play_bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="133.3dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/media_play_bottom_background">
+
+        <RelativeLayout
+            android:id="@+id/media_play_seek_bar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:gravity="center">
+
+            <com.ktc.media.media.view.MediaSeekBar
+                android:id="@+id/media_play_seek_bar"
+                android:layout_width="1020dp"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:nextFocusDown="@id/media_play_pause_btn"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:progressDrawable="@drawable/seek_bar_background"
+                android:thumb="@drawable/seek_bar_thumb" />
+
+            <TextView
+                android:id="@+id/media_play_current_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6.7dp"
+                android:layout_toStartOf="@id/media_play_seek_bar"
+                android:textColor="@color/common_text_color"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/media_play_duration_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.7dp"
+                android:layout_toEndOf="@id/media_play_seek_bar"
+                android:textColor="@color/common_text_color"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/media_play_controller_button_container"
+            android:layout_width="wrap_content"
+            android:layout_height="53.3dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="14.7dp">
+
+            <ImageView
+                android:id="@+id/media_previous_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusLeft="@id/media_setting_btn"
+                android:src="@drawable/media_previous_image" />
+
+            <ImageView
+                android:id="@+id/media_play_pause_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:layout_marginStart="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/media_play_image" />
+
+            <ImageView
+                android:id="@+id/media_next_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:layout_marginStart="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/media_next_image" />
+
+            <ImageView
+                android:id="@+id/media_zoom_out_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:layout_marginStart="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/media_zoom_out_image" />
+
+            <ImageView
+                android:id="@+id/media_zoom_in_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:layout_marginStart="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/media_zoom_in_image" />
+
+            <ImageView
+                android:id="@+id/media_rotate_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:layout_marginStart="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/media_rotate_image" />
+
+            <ImageView
+                android:id="@+id/media_setting_btn"
+                android:layout_width="53.3dp"
+                android:layout_height="53.3dp"
+                android:layout_marginStart="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusRight="@id/media_previous_btn"
+                android:src="@drawable/media_setting_image" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

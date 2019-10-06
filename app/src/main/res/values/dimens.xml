@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="borderWidth">0dp</dimen>
+    <dimen name="backgroundMargin">8dp</dimen>
+    <dimen name="linear_divider_width">6.67dp</dimen>
+    <dimen name="list_left_margin">13.3dp</dimen>
+</resources>

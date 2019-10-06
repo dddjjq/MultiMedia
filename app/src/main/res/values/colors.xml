@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="disk_list_title_color">#FEFFFF</color>
+    <color name="common_text_color">#FFFFFF</color>
+    <color name="common_text_color_alpha_0.5">#80FFFFFF</color>
+    <color name="span_text_color">#4EC3FF</color>
+    <!--menu start-->
+    <color name="common_background_color">#36b2b7</color>
+    <color name="major_view_text_focus_color">#5bfdff</color>
+    <color name="major_view_text_normal_color">#ffffff</color>
+    <!--menu end-->
+</resources>

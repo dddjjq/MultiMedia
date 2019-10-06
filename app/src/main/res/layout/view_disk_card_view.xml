@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="272dp"
+    android:layout_height="392dp">
+
+    <ImageView
+        android:id="@+id/disk_card_image"
+        android:layout_width="105.3dp"
+        android:layout_height="104dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="102.7dp"
+        android:src="@drawable/main_disk_icon" />
+
+    <com.ktc.media.view.MarqueeTextView
+        android:id="@+id/disk_card_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/disk_card_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="12.5dp"
+        android:duplicateParentState="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/common_text_color"
+        android:textSize="24sp" />
+
+    <com.ktc.media.view.MarqueeTextView
+        android:id="@+id/disk_card_last_memory"
+        android:layout_below="@id/disk_card_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="12.5dp"
+        android:duplicateParentState="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/common_text_color"
+        android:textSize="13.3sp" />
+</RelativeLayout>

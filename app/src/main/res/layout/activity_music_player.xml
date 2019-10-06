@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/music_player_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_background">
+
+    <LinearLayout
+        android:id="@+id/music_player_album_container"
+        android:layout_width="386.7dp"
+        android:layout_height="404dp"
+        android:layout_marginStart="234.7dp"
+        android:layout_marginTop="109.3dp">
+
+        <ImageView
+            android:id="@+id/music_player_article_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/music_player_article_null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/music_player_info_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="106.7dp"
+        android:layout_marginTop="80dp"
+        android:layout_toEndOf="@id/music_player_album_container"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/music_player_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="26.7sp" />
+
+        <TextView
+            android:id="@+id/music_player_article_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/common_text_color"
+            android:textSize="21.3sp" />
+
+        <TextView
+            android:id="@+id/music_player_album_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/common_text_color"
+            android:textSize="21.3sp" />
+
+        <com.ktc.media.media.music.LyricView
+            android:id="@+id/music_player_lyric_view"
+            android:layout_width="wrap_content"
+            android:layout_height="285dp"
+            android:layout_marginTop="50dp" />
+    </LinearLayout>
+
+    <com.ktc.media.media.view.MediaControllerView
+        android:id="@+id/music_player_controller_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        app:isPicture="false"
+        app:needTop="false">
+
+    </com.ktc.media.media.view.MediaControllerView>
+</RelativeLayout>

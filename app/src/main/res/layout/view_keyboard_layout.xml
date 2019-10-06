@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="413.3dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/keyboard_background"
+    android:paddingEnd="36.7dp"
+    android:paddingStart="36.7dp">
+
+    <com.ktc.media.view.KeyboardEditText
+        android:id="@+id/keyboard_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="155dp"
+        android:background="@drawable/keyboard_edit_background"
+        android:paddingStart="35dp"
+        android:textSize="33.3sp"
+        android:textColor="@color/common_text_color"
+        android:textCursorDrawable="@drawable/keyboard_divider" />
+
+    <RelativeLayout
+        android:id="@+id/keyboard_grid_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/keyboard_edit"
+        android:layout_marginTop="40dp">
+
+        <!--first line-->
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_clear"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            app:keyboardItemIcon="@drawable/keyboard_clear"
+            app:keyboardItemStyle="@integer/keyboard_item_style_02" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_0"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/keyboard_clear"
+            app:keyboardFirstText="@string/str_keyboard_num_0"
+            app:keyboardItemStyle="@integer/keyboard_item_style_04" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_backspace"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/keyboard_num_0"
+            app:keyboardItemIcon="@drawable/keyboard_backspace"
+            app:keyboardItemStyle="@integer/keyboard_item_style_02" />
+
+        <!--second line-->
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_1"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_clear"
+            android:layout_marginTop="20dp"
+            app:keyboardFirstText="@string/str_keyboard_num_1"
+            app:keyboardItemStyle="@integer/keyboard_item_style_04" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_2"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_clear"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/keyboard_num_1"
+            app:keyboardFirstText="@string/str_keyboard_num_2"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_abc" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_3"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_clear"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/keyboard_num_2"
+            app:keyboardFirstText="@string/str_keyboard_num_3"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_def" />
+        <!--third line-->
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_4"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_num_1"
+            android:layout_marginTop="20dp"
+            app:keyboardFirstText="@string/str_keyboard_num_4"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_ghi" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_5"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_num_1"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/keyboard_num_4"
+            app:keyboardFirstText="@string/str_keyboard_num_5"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_jkl" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_6"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_num_1"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/keyboard_num_5"
+            app:keyboardFirstText="@string/str_keyboard_num_6"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_mno" />
+        <!--forth line-->
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_7"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_num_4"
+            android:layout_marginTop="20dp"
+            app:keyboardFirstText="@string/str_keyboard_num_7"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_pqrs" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_8"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_num_4"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/keyboard_num_7"
+            app:keyboardFirstText="@string/str_keyboard_num_8"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_tuv" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_num_9"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/keyboard_num_4"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/keyboard_num_8"
+            app:keyboardFirstText="@string/str_keyboard_num_9"
+            app:keyboardItemStyle="@integer/keyboard_item_style_01"
+            app:keyboardSecondText="@string/str_keyboard_num_wzyx" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/keyboard_grid_layout"
+        android:layout_marginTop="40dp">
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_t9"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            app:keyboardItemStyle="@integer/keyboard_item_style_03"
+            app:keyboardFirstText="@string/str_keyboard_t9" />
+
+        <com.ktc.media.view.KeyboardItemView
+            android:id="@+id/keyboard_system"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            app:keyboardItemStyle="@integer/keyboard_item_style_03"
+            app:keyboardFirstText="@string/str_keyboard_system" />
+    </LinearLayout>
+</RelativeLayout>

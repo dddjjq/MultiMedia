@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="234.7dp"
+    android:layout_height="193.3dp"
+    android:background="@drawable/grid_background_normal"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <ImageView
+        android:id="@+id/media_grid_item_image"
+        android:layout_width="50.7dp"
+        android:layout_height="50.7dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50.7dp" />
+
+    <com.ktc.media.view.MarqueeTextView
+        android:id="@+id/media_grid_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:duplicateParentState="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="186dp"
+        android:singleLine="true"
+        android:textColor="@color/common_text_color"
+        android:textSize="16sp" />
+</RelativeLayout>

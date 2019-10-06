@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="412dp"
+    android:layout_height="198.7dp"
+    android:background="@drawable/picture_card_background">
+
+    <ImageView
+        android:id="@+id/picture_card_image"
+        android:layout_width="121.3dp"
+        android:layout_height="89.3dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginStart="57.3dp"
+        android:src="@drawable/main_picture_icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/picture_card_image"
+        android:layout_centerVertical="true"
+        android:textSize="30.7sp"
+        android:text="@string/str_picture_title"
+        android:textColor="@color/common_text_color" />
+
+    <TextView
+        android:id="@+id/picture_card_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:textSize="24sp"
+        android:textColor="@color/common_text_color" />
+</RelativeLayout>

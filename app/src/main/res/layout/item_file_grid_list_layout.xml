@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ktc.media.view.MediaGridItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/file_grid_list_item"
+    android:layout_width="234.7dp"
+    android:layout_height="193.3dp">
+
+</com.ktc.media.view.MediaGridItemView>

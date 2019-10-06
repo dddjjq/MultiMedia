@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- for music  -->
+    <string-array name="audio_filter">
+        <item>.mp3</item>
+        <item>.wma</item>
+        <item>.aac</item>
+        <item>.ogg</item>
+        <item>.pcm</item>
+        <item>.m4a</item>
+        <item>.ac3</item>
+        <item>.ec3</item>
+        <item>.dtshd</item>
+        <item>.ra</item>
+        <item>.wav</item>
+        <item>.cd</item>
+        <item>.amr</item>
+        <item>.mp2</item>
+        <item>.ape</item>
+        <item>.dts</item>
+        <item>.flac</item>
+        <item>.midi</item>
+        <item>.mid</item>
+    </string-array>
+
+    <!-- for video -->
+    <string-array name="video_filter">
+        <item>.avi</item>
+        <item>.asf</item>
+        <item>.wmv</item>
+        <item>.m2t</item>
+        <item>.mts</item>
+        <item>.ts</item>
+        <item>.mpg</item>
+        <item>.m2p</item>
+        <item>.mp4</item>
+        <item>.flv</item>
+        <item>.swf</item>
+        <item>.vob</item>
+        <item>.mkv</item>
+        <item>.divx</item>
+        <item>.xvid</item>
+        <item>.mov</item>
+        <item>.rmvb</item>
+        <item>.rv</item>
+        <item>.3gp</item>
+        <item>.3g2</item>
+        <item>.dat</item>
+        <item>.pmp</item>
+        <item>.tp</item>
+        <item>.trp</item>
+        <item>.rm</item>
+        <item>.webm</item>
+        <item>.m2ts</item>
+        <item>.ssif</item>
+        <item>.mpeg</item>
+        <item>.mpe</item>
+        <item>.m3u8</item>
+        <item>.iso</item>
+        <item>.bdmv</item>
+        <item>.m4v</item>
+        <item>.m2v</item>
+        <item>.mka</item>
+    </string-array>
+
+    <!-- for picture -->
+    <string-array name="picture_filter">
+        <item>.jpg</item>
+        <item>.jpeg</item>
+        <item>.png</item>
+        <item>.bmp</item>
+        <item>.gif</item>
+        <item>.tiff</item>
+        <item>.tga</item>
+        <item>.exif</item>
+        <item>.fpx</item>
+        <item>.svg</item>
+        <item>.psd</item>
+        <item>.cdr</item>
+        <item>.pcd</item>
+        <item>.dxf</item>
+        <item>.ufo</item>
+        <item>.eps</item>
+        <item>.raw</item>
+        <item>.mpo</item>
+    </string-array>
+
+    <!-- for zip压缩包 -->
+    <array name="package_filter">
+        <item>.jar</item>
+        <item>.zip</item>
+        <item>.rar</item>
+        <item>.gz</item>
+    </array>
+
+    <!-- for 文本 -->
+    <array name="file_filter">
+        <!-- for html -->
+        <item>.htm</item>
+        <item>.html</item>
+        <item>.php</item>
+        <item>.css</item>
+        <item>.xml</item>
+        <item>.js</item>
+        <!-- for subtitle -->
+        <item>.txt</item>
+        <item>.srt</item>
+        <item>.ass</item>
+        <item>.ssa</item>
+        <item>.idx</item>
+        <item>.sub</item>
+        <item>.sup</item>
+        <item>.smi</item>
+        <item>.ttxt</item>
+        <!-- 歌词 -->
+        <item>.lrc</item>
+    </array>
+
+    <array name="txt_filter">
+        <item>.txt</item>
+    </array>
+
+    <!-- for apk -->
+    <array name="apk_filter">
+        <item>.apk</item>
+    </array>
+
+    <array name="doc_filter">
+        <item>.doc</item>
+        <item>.docx</item>
+    </array>
+
+    <array name="ppt_filter">
+        <item>.ppt</item>
+        <item>.pptx</item>
+    </array>
+
+    <array name="xls_filter">
+        <item>.xls</item>
+        <item>.xlsx</item>
+    </array>
+
+    <array name="pdf_filter">
+        <item>.pdf</item>
+    </array>
+
+    <array name="type_title_arr">
+        <item>视频</item>
+        <item>音乐</item>
+        <item>图片</item>
+    </array>
+
+    <string-array name="video_menu_list">
+        <item>视频信息</item>
+        <item>画面比例</item>
+        <item>图像模式</item>
+        <item>声音模式</item>
+        <item>高级设置</item>
+        <item>循环模式</item>
+    </string-array>
+
+    <string-array name="video_menu_zoom_list">
+        <item>最佳（自动）</item>
+        <item>16:9</item>
+        <item>4:3</item>
+        <item>电影</item>
+        <item>字幕</item>
+    </string-array>
+
+    <string-array name="video_menu_picture_list">
+        <item>标准</item>
+        <item>柔和</item>
+        <item>用户</item>
+        <item>亮丽</item>
+    </string-array>
+
+    <string-array name="video_menu_sound_list">
+        <item>用户模式</item>
+        <item>标准模式</item>
+        <item>电影模式</item>
+        <item>音乐模式</item>
+    </string-array>
+
+    <string-array name="video_menu_repeat_list">
+        <item>顺序播放</item>
+        <item>随机播放</item>
+        <item>单片循环</item>
+        <item>列表循环</item>
+    </string-array>
+
+    <string-array name="music_menu_list">
+        <item>音乐信息</item>
+        <item>声音模式</item>
+        <item>高级设置</item>
+        <item>循环模式</item>
+    </string-array>
+
+    <string-array name="music_menu_sound_list">
+        <item>用户模式</item>
+        <item>标准模式</item>
+        <item>电影模式</item>
+        <item>音乐模式</item>
+    </string-array>
+
+    <string-array name="menu_setting_list">
+        <item>声音设置</item>
+        <item>图像设置</item>
+    </string-array>
+
+    <string-array name="music_menu_repeat_list">
+        <item>顺序播放</item>
+        <item>随机播放</item>
+        <item>单曲循环</item>
+        <item>列表循环</item>
+    </string-array>
+
+    <string-array name="picture_menu_list">
+        <item>图片信息</item>
+        <item>图像模式</item>
+        <item>高级设置</item>
+        <item>幻灯片间隔</item>
+        <item>循环模式</item>
+    </string-array>
+
+    <string-array name="picture_menu_mode_list">
+        <item>标准</item>
+        <item>柔和</item>
+        <item>用户</item>
+        <item>亮丽</item>
+    </string-array>
+
+    <string-array name="picture_menu_ppt_duration_list">
+        <item>3S</item>
+        <item>5S</item>
+        <item>10S</item>
+        <item>15S</item>
+        <item>30S</item>
+    </string-array>
+
+    <string-array name="picture_menu_repeat_list">
+        <item>顺序播放</item>
+        <!--<item>随机播放</item>-->
+        <item>单片循环</item>
+        <item>列表循环</item>
+    </string-array>
+</resources>

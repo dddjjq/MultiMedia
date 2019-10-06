@@ -1,0 +1,154 @@
+<resources>
+    <string name="app_name">KTCMedia</string>
+    <string name="str_disk_list">磁盘列表</string>
+    <string name="str_picture_title">图片</string>
+    <string name="str_music_title">音乐</string>
+    <string name="str_video_title">视频</string>
+    <string name="str_disk_last_memory">剩余空间:</string>
+
+    <string name="str_video_list_count">共%d个视频</string>
+    <string name="str_music_list_count">共%d首音乐</string>
+    <string name="str_picture_list_count">共%d张图片</string>
+    <string name="str_file_list_count">共%d个对象</string>
+
+    <string name="str_empty_no_data">无数据！</string>
+    <string name="str_universal_storage_internal">内部存储</string>
+    <string name="str_universal_storage_default">可移动磁盘</string>
+
+    <!--keyboard-->
+    <string name="str_keyboard_num_0">0</string>
+    <string name="str_keyboard_num_1">1</string>
+    <string name="str_keyboard_num_2">2</string>
+    <string name="str_keyboard_num_3">3</string>
+    <string name="str_keyboard_num_4">4</string>
+    <string name="str_keyboard_num_5">5</string>
+    <string name="str_keyboard_num_6">6</string>
+    <string name="str_keyboard_num_7">7</string>
+    <string name="str_keyboard_num_8">8</string>
+    <string name="str_keyboard_num_9">9</string>
+
+    <string name="str_keyboard_num_abc">ABC</string>
+    <string name="str_keyboard_num_def">DEF</string>
+    <string name="str_keyboard_num_ghi">GHI</string>
+    <string name="str_keyboard_num_jkl">JKL</string>
+    <string name="str_keyboard_num_mno">MNO</string>
+    <string name="str_keyboard_num_pqrs">PQRS</string>
+    <string name="str_keyboard_num_tuv">TUV</string>
+    <string name="str_keyboard_num_wzyx">WZYX</string>
+
+    <string name="str_keyboard_t9">T9键盘</string>
+    <string name="str_keyboard_system">系统键盘</string>
+
+    <string name="play_setting_0_value_2">关</string>
+
+    <string name="str_menu_title">设置</string>
+
+    <!--music start-->
+    <string name="music_info">歌曲信息</string>
+    <string name="file_duration">歌曲时长:</string>
+    <string name="music_default_time">00:00:00</string>
+    <string name="Artist_name">演唱者名:</string>
+    <string name="file_path">文件路径:</string>
+    <string name="none_lyrics_find">没找到歌词</string>
+    <string name="unknown">未知</string>
+    <string name="singer">歌手:</string>
+    <string name="album_text">专辑:</string>
+    <string name="exit_music_play">确定退出音乐播放吗?</string>
+    <string name="alert">提醒</string>
+    <string name="music_media_play_next">继续播放下一个音乐？</string>
+
+    <string name="video_media_other_error_unknown">其它未知错误</string>
+    <string name="video_media_error_not_valid">不是有效的连续视频序列</string>
+    <string name="video_media_error_server_died">媒体播放器服务端卡死</string>
+    <string name="video_media_error_unknown">未知错误</string>
+    <string name="video_media_error_malformed">其它异常错误</string>
+    <string name="video_media_error_io">IO 读写错误</string>
+    <string name="video_media_error_unsupported">系统不支持错误</string>
+    <string name="video_media_error_format_unsupport">格式不支持</string>
+    <string name="video_media_error_not_connected">数据连接错误</string>
+    <string name="video_media_error_audio_unsupport">音频格式不支持</string>
+    <string name="video_media_error_video_unsupport">视频格式不支持</string>
+    <string name="video_media_error_no_license">播放的数据没有授权许可</string>
+    <string name="video_media_error_license_expired">授权许可过期</string>
+
+    <string name="disk_eject">磁盘已移除</string>
+    <string name="show_info">播放错误 </string>
+    <string name="exit_ok">确定</string>
+    <string name="exit_cancel">取消</string>
+    <string name="exit_title">警告</string>
+    <string name="exit_confirm">确定把此节目删除节目列表?</string>
+    <string name="current_time">当前时间 :</string>
+    <string name="total_duration">总时长 :</string>
+    <string name="choice">选择</string>
+    <string name="confirm">确认</string>
+
+    <string name="music_info_name">名称：</string>
+    <string name="music_info_duration">时长：</string>
+    <string name="music_info_artist">歌手：</string>
+    <string name="music_info_format">格式：</string>
+    <string name="music_info_codec">音频：</string>
+
+    <!--Image start-->
+    <string name="file_name">文件名称:</string>
+    <string name="photo_info">图片信息</string>
+    <string name="file_create_time">创建时间:</string>
+    <string name="file_size">文件大小:</string>
+    <string name="file_format">文件格式:</string>
+    <string name="display_img_name">显示图片的名称</string>
+    <string name="photo_3D_toast">3D模式下，不允许该操作</string>
+    <string name="photo_set_wallpaper">设置墙纸</string>
+    <string name="first_photo">当前已为第一张图片!</string>
+    <string name="last_photo">当前已为最后一张图片!</string>
+    <string name="can_not_decode">图片过大，不能解析!</string>
+    <string name="can_not_decode_previous">上一张图片过大，不能解析!</string>
+    <string name="can_not_decode_next">下一张图片过大，不能解析!</string>
+    <string name="current_pic">当前的图片为:</string>
+    <string name="is_setting_wallpaper">正在设置墙纸，请稍后。。。</string>
+    <string name="picture_can_not_decode">该图片不能解析!</string>
+    <string name="picture_decoding">图片正在解析。。。</string>
+    <string name="picture_wallpaper">正在设置壁纸。。。</string>
+    <string name="picture_decode_failed">图片解析出错!</string>
+    <string name="picture_can_not_set3d">不是3D图片!</string>
+    <string name="picture_playing_time">幻灯片间隔时间</string>
+    <string name="picture_animation_setting">动画效果</string>
+    <string name="photo_GIF_toast">GIF动画模式下，不允许该操作</string>
+    <string name="photo_out_of_memory_toast">内存不足!</string>
+    <string name="photo_scale_or_rotate_toast">缩放和旋转模式下，不允许设置3D模式</string>
+    <string name="photo_pan_success_toast">图片平移成功</string>
+    <string name="photo_pan_failed_toast">图片平移失败!</string>
+    <string name="photo_pan_parameter_invalid">图片平移参数无效!</string>
+    <string name="not_supported_3D_this_platform">该平台不支持3D</string>
+    <string name="photo_media_play_next">继续播放下一张图片？</string>
+    <string name="file_not_support">格式不支持</string>
+    <string name="photo_not_support_scale">平台内存太小，不支持缩放操作！</string>
+    <string name="photo_zooming">图片缩放中...</string>
+    <string name="photo_rotating">图片旋转中...</string>
+    <string name="max_tip">达到最大的缩放比例！</string>
+    <string name="min_tip">达到最小的缩放比例！</string>
+    <string name="busy_tip">系统正在处理中，请稍后重试！</string>
+
+    <string name="picture_info_name">名称：</string>
+    <string name="picture_info_time">时间：</string>
+    <string name="picture_info_size">大小：</string>
+    <string name="picture_info_format">格式：</string>
+
+    <!--Video start-->
+    <string name="video_sub_no_support_fullscreen_in_4K2K">Video sub do not support fullscreen in 4K2K!</string>
+    <string name="video_display_previous_video_last_frame">Because the video only has audio, it displays the last frame of previous video in video seamless playback!!</string>
+    <string name="video_no_support_two_4k">不支持两个4k video同时播放.</string>
+    <string name="buffering">此视频正在缓冲，请等待。。。</string>
+    <string name="video_iso_tip">ISO文件不支持</string>
+    <string name="choose_time_failed">该视频不能精确定位!!</string>
+    <string name="video_media_play_next">继续播放下一个视频？</string>
+    <string name="video_media_info_video_decoder_over_capability">not support 4k2k in pip mode</string>
+    <string name="video_media_infor_no_index">视频文件没有索引,无法定位开始位置或快退</string>
+    <string name="video_breakpoint_play">是否接着前次播放？</string>
+    <string name="open_file_fail">无法打开此文件! </string>
+
+    <string name="video_info_name">名称：</string>
+    <string name="video_info_duration">时长：</string>
+    <string name="video_info_size">大小：</string>
+    <string name="video_info_format">格式：</string>
+    <string name="video_info_audio_codec">音频：</string>
+    <string name="video_info_video_codec">视频：</string>
+</resources>

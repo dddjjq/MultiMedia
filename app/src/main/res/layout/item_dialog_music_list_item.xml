@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="285.3dp"
+    android:layout_height="98.7dp">
+
+    <ImageView
+        android:id="@+id/music_item_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="33.3dp"
+        android:src="@drawable/dialog_music_icon" />
+
+    <com.ktc.media.view.MarqueeTextView
+        android:id="@+id/music_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="13.3dp"
+        android:layout_toEndOf="@id/music_item_image"
+        android:duplicateParentState="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/common_text_color"
+        android:textSize="21.3sp" />
+</RelativeLayout>

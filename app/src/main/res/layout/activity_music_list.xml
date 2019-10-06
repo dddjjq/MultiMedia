@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_background">
+
+    <com.ktc.media.view.KeyboardView
+        android:id="@+id/music_keyboard_view"
+        android:layout_width="413.3dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="-413.3dp" />
+
+    <RelativeLayout
+        android:id="@+id/music_list_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/music_keyboard_view">
+
+        <RelativeLayout
+            android:id="@+id/music_title_container"
+            android:layout_width="1020dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/music_list_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="66.7dp"
+                android:layout_marginTop="66.7dp"
+                android:text="@string/str_music_title"
+                android:textColor="@color/common_text_color"
+                android:textSize="36sp" />
+
+            <ImageView
+                android:id="@+id/music_list_title_divider"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/music_list_title_text"
+                android:layout_alignTop="@id/music_list_title_text"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/music_list_title_text"
+                android:src="@color/common_text_color" />
+
+            <com.ktc.media.view.MarqueeTextView
+                android:id="@+id/music_list_sub_title_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/music_list_title_text"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/music_list_title_divider"
+                android:duplicateParentState="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxWidth="780dp"
+                android:singleLine="true"
+                android:textColor="@color/common_text_color_alpha_0.5"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/music_list_sub_title_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/music_title_container"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="150dp"
+            android:textColor="@color/common_text_color_alpha_0.5"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/music_list_switch_image"
+            android:layout_width="53.3dp"
+            android:layout_height="53.3dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="333.3dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/switch_grid_image" />
+
+        <ImageView
+            android:id="@+id/music_list_search_image"
+            android:layout_width="53.3dp"
+            android:layout_height="53.3dp"
+            android:layout_below="@id/music_list_switch_image"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/search_image" />
+
+        <com.ktc.media.view.FileListContainer
+            android:id="@+id/music_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="86dp"
+            android:layout_marginEnd="133.3dp"
+            android:layout_marginStart="133.3dp"
+            android:layout_marginTop="150dp"
+            android:clipChildren="false"
+            android:descendantFocusability="afterDescendants">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/music_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/list_left_margin"
+                android:layout_marginStart="@dimen/list_left_margin"
+                android:clipChildren="false"
+                android:layoutAnimation="@anim/media_item_add_animation"
+                android:paddingBottom="4dp"
+                android:paddingEnd="53.3dp"
+                android:scrollbarFadeDuration="0"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbarThumbVertical="@drawable/shape_scrollbar_thumb"
+                android:scrollbarTrackVertical="@drawable/shape_scrollbar_track"
+                android:scrollbars="vertical">
+
+            </android.support.v7.widget.RecyclerView>
+        </com.ktc.media.view.FileListContainer>
+
+        <include
+            layout="@layout/media_empty_layout"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

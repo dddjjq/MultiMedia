@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ktc.media.view.MediaGridItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/music_grid_list_item"
+    android:layout_width="234.7dp"
+    android:layout_height="193.3dp"
+    app:gridIcon="@drawable/music_icon">
+
+</com.ktc.media.view.MediaGridItemView>

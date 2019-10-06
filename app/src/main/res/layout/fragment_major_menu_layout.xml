@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/major_menu_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="67dp"
+        android:text="@string/str_menu_title"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp" />
+
+    <com.ktc.media.menu.view.MenuViewContainer
+        android:id="@+id/major_menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="95dp">
+
+    </com.ktc.media.menu.view.MenuViewContainer>
+</RelativeLayout>

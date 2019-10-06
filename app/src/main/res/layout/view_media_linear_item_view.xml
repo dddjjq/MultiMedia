@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_background_normal"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <ImageView
+        android:id="@+id/media_linear_item_image"
+        android:layout_width="50.7dp"
+        android:layout_height="50.7dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="53.3dp"
+        android:translationZ="1dp" />
+
+    <com.ktc.media.view.MarqueeTextView
+        android:id="@+id/media_linear_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="26.7dp"
+        android:layout_toEndOf="@id/media_linear_item_image"
+        android:duplicateParentState="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="650dp"
+        android:singleLine="true"
+        android:textColor="@color/common_text_color"
+        android:textSize="24sp"
+        android:translationZ="1dp" />
+
+    <TextView
+        android:id="@+id/media_linear_item_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="53.3dp"
+        android:textColor="@color/common_text_color"
+        android:textSize="24sp"
+        android:translationZ="1dp" />
+</RelativeLayout>

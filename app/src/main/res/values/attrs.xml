@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FileListContainer">
+        <attr name="focusBg" format="reference" />
+        <attr name="duration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="MediaLinearItemView">
+        <attr name="icon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MediaGridItemView">
+        <attr name="gridIcon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="KeyboardItemView">
+        <attr name="keyboardItemIcon" format="reference" />
+        <attr name="keyboardFirstText" format="string" />
+        <attr name="keyboardSecondText" format="string" />
+        <attr name="keyboardItemStyle" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="MediaControllerView">
+        <attr name="isPicture" format="boolean" />
+        <attr name="needTop" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MenuViewContainer">
+        <attr name="focusBackGround" format="reference" />
+    </declare-styleable>
+</resources>

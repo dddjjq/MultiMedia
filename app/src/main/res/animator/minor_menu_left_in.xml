@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:duration="@integer/menu_anim_duration_long"
+        android:propertyName="translationX"
+        android:valueFrom="-253dp"
+        android:valueTo="0dp"
+        android:interpolator="@android:anim/accelerate_interpolator" />
+
+</set>

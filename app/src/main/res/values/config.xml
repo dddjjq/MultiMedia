@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="fly_border_duration">200</integer>
+    <integer name="keyboard_item_style_01">1</integer>
+    <integer name="keyboard_item_style_02">2</integer>
+    <integer name="keyboard_item_style_03">3</integer>
+    <integer name="keyboard_item_style_04">4</integer>
+    <integer name="menu_anim_duration_short">200</integer>
+    <integer name="menu_anim_duration_long">300</integer>
+</resources>

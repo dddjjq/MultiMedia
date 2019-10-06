@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@android:id/background"
+        android:height="5dp"
+        android:drawable="@drawable/media_player_slider"
+        android:gravity="center_vertical"></item>
+
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:height="5dp"
+        android:gravity="center_vertical">
+        <clip>
+            <shape>
+                <corners android:radius="5dp" />
+            </shape>
+        </clip>
+    </item>
+
+    <item
+        android:id="@android:id/progress"
+        android:height="5dp"
+        android:gravity="center_vertical">
+        <clip>
+            <shape>
+                <solid android:color="@color/span_text_color" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>
