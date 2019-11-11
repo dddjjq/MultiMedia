@@ -18,10 +18,12 @@ import com.ktc.media.adapter.VideoLinearListAdapter;
 import com.ktc.media.base.BaseActivity;
 import com.ktc.media.constant.Constants;
 import com.ktc.media.data.FileDataManager;
+import com.ktc.media.data.ThreadPoolManager;
 import com.ktc.media.media.video.VideoPlayerActivity;
 import com.ktc.media.model.BaseData;
 import com.ktc.media.model.VideoData;
 import com.ktc.media.util.DestinyUtil;
+import com.ktc.media.util.ExecutorUtil;
 import com.ktc.media.util.SpaceItemDecoration;
 import com.ktc.media.view.FileListContainer;
 import com.ktc.media.view.KeyboardView;
@@ -31,8 +33,11 @@ import com.ktc.media.view.MediaLinearItemView;
 import com.ktc.media.view.OnItemClickListener;
 import com.ktc.media.view.OnItemFocusListener;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VideoListActivity extends BaseActivity implements OnItemFocusListener
         , View.OnClickListener, KeyboardView.OnTextChangeListener, OnItemClickListener {
@@ -54,6 +59,7 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
     private boolean isKeyboardVisible = false;
     private static final int spanCount = 4;
     private String currentLeftTitle;
+    private ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
 
     @Override
     public int getLayoutId() {
@@ -73,27 +79,39 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
         emptyView = (RelativeLayout) findViewById(R.id.media_empty_layout);
         emptyImage = (ImageView) findViewById(R.id.media_empty_image);
         keyboardView.setEnabled(false);
+        changeLeftFocusable(false);
+        videoListView.setHasFixedSize(true);
     }
 
     @Override
     public void initData() {
         mDataList = getIntent().getParcelableArrayListExtra(Constants.TYPE_VIDEO);
-        if (mDataList == null || mDataList.size() == 0) {
-            mDataList = FileDataManager.getInstance(this).getAllVideoData();
+        if (mDataList == null) {
+            mDataList = new ArrayList<>();
+        } else {
+            changeEmptyStatus(mDataList, false);
+            subtitleRightText.setText(getString(R.string.str_video_list_count, mDataList.size()));
         }
         mVideoLinearListAdapter = new VideoLinearListAdapter(this, mDataList);
         mVideoGridListAdapter = new VideoGridListAdapter(this, mDataList);
-        subtitleRightText.setText(getString(R.string.str_video_list_count, mDataList.size()));
         setLinearAdapter();
-        changeEmptyStatus(mDataList, false);
+        if (mDataList == null || mDataList.size() == 0) {
+            updateDataList(null);
+        }
     }
 
     @Override
     public void initFocus() {
         videoListView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
-            public void onChildViewAttachedToWindow(@NonNull View view) {
-                view.requestFocus();
+            public void onChildViewAttachedToWindow(@NonNull final View view) {
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.requestFocus();
+                        changeLeftFocusable(true);
+                    }
+                }, 100);
                 mListContainer.setNewFocus(view);
                 videoListView.removeOnChildAttachStateChangeListener(this);
             }
@@ -122,13 +140,22 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
     }
 
     @Override
-    public void handleDataIntent(Intent intent) {
-        String action = intent.getAction();
-        if (action == null) return;
-        if (action.equals(Constants.ALL_REFRESH_ACTION)
-                || action.equals(Constants.PATH_DELETE_ACTION)) {
-            refreshList();
+    public void handleUpdate(String type) {
+        if (type.equals(Constants.ALL_REFRESH_ACTION)
+                || type.equals(Constants.PATH_DELETE_ACTION)
+                || type.equals(Constants.VIDEO_REFRESH_ACTION)) {
+            updateDataList(null);
         }
+    }
+
+    @Override
+    public void blockFocus() {
+        changeLeftFocusable(false);
+    }
+
+    @Override
+    public void releaseFocus() {
+        changeLeftFocusable(true);
     }
 
 
@@ -162,10 +189,39 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
         }
     }
 
+    private void updateDataList(final String fromSearch) {
+        mExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<VideoData> videoDataList = FileDataManager.getInstance(VideoListActivity.this).getAllVideoData();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDataList.clear();
+                        setAdapterAndNotify();
+                        mDataList.addAll(videoDataList);
+                        if (fromSearch == null) {
+                            refreshList();
+                        } else {
+                            refreshListFromSearch(fromSearch);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
     private void refreshList() {
-        mDataList.clear();
-        mDataList.addAll(FileDataManager.getInstance(this).getAllVideoData());
         changeEmptyStatus(mDataList, false);
+        setAdapterAndNotify();
+        if (isKeyboardVisible) {
+            subtitleLeftText.setText(getString(R.string.str_video_list_count, mDataList.size()));
+        }
+        subtitleRightText.setText(getString(R.string.str_video_list_count, mDataList.size()));
+    }
+
+    private void setAdapterAndNotify() {
         if (isCurrentLinear) {
             videoListView.setAdapter(mVideoLinearListAdapter);
             mVideoLinearListAdapter.notifyDataSetChanged();
@@ -173,10 +229,13 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
             videoListView.setAdapter(mVideoGridListAdapter);
             mVideoGridListAdapter.notifyDataSetChanged();
         }
-        if (isKeyboardVisible) {
-            subtitleLeftText.setText(getString(R.string.str_video_list_count, mDataList.size()));
-        }
-        subtitleRightText.setText(getString(R.string.str_video_list_count, mDataList.size()));
+    }
+
+    private void changeLeftFocusable(boolean canFocus) {
+        switchImageBtn.setFocusable(canFocus);
+        switchImageBtn.setFocusableInTouchMode(canFocus);
+        searchImageBtn.setFocusable(canFocus);
+        searchImageBtn.setFocusableInTouchMode(canFocus);
     }
 
     private void changeKeyboardStatus(boolean isVisible) {
@@ -186,7 +245,7 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
         changeLeftImageBtnVisible(!isVisible);
         adjustFlyBoardView();//重新调整飞框
         startKeyboardAnimation(isVisible);
-        if (!isVisible) refreshList();
+        if (!isVisible) updateDataList(null);
         clearKeyboard();
     }
 
@@ -195,9 +254,11 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
         if (isVisible) {
             keyboardView.setEnabled(true);
             widthAnimator = ValueAnimator.ofFloat(1, 0).setDuration(300);
+            keyboardView.editTextRequestFocus();
         } else {
             keyboardView.setEnabled(false);
             widthAnimator = ValueAnimator.ofFloat(0, 1).setDuration(300);
+            searchImageBtn.requestFocus();
         }
         widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -333,15 +394,13 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
         if (TextUtils.isEmpty(s)) {
             mVideoLinearListAdapter.setSpanText(null);
             mVideoGridListAdapter.setSpanText(null);
-            refreshList();
+            updateDataList(null);
         } else {
-            refreshListFromSearch(s);
+            updateDataList(s);
         }
     }
 
     private void refreshListFromSearch(String s) {
-        mDataList.clear();
-        mDataList.addAll(FileDataManager.getInstance(this).getAllVideoData());
         Iterator<VideoData> videoMusicDataIterator = mDataList.iterator();
         while (videoMusicDataIterator.hasNext()) {
             VideoData videoData = videoMusicDataIterator.next();
@@ -374,5 +433,12 @@ public class VideoListActivity extends BaseActivity implements OnItemFocusListen
         Intent intent = new Intent(this, VideoPlayerActivity.class);
         intent.putExtra(Constants.BUNDLE_PATH_KEY, baseData.getPath());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ExecutorUtil.shutdownAndAwaitTermination(mExecutorService);
+        mVideoLinearListAdapter.release();
     }
 }

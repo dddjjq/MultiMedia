@@ -14,10 +14,11 @@ android {
         applicationId "com.ktc.media"
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 10000
+        versionName "10000"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -28,6 +29,11 @@ android {
             tasks.withType(JavaCompile) {
                 options.compilerArgs.add('-Xbootclasspath/p:app/libs/framework.jar')
             }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path file('CMakeLists.txt')
         }
     }
 }
@@ -43,6 +49,5 @@ dependencies {
     compileOnly files('libs/framework.jar')
     compileOnly files('libs/mstar.jar')
     compileOnly files('libs/mstar_ext.jar')
-    /*implementation files('libs/mediatek_sharecode.jar')*/
     implementation files('libs/mediateck_factory.jar')
 }

@@ -46,7 +46,6 @@ public class DiskContainer extends HorizontalScrollView implements OnItemClickLi
     public void addDiskView(DiskData diskData) {
         DiskCardView diskCardView = new DiskCardView(getContext());
         diskCardView.setDiskName(diskData.getName());
-        diskCardView.setDiskLastMemory(getDiskLastMemoryString(diskData));
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DestinyUtil.dp2px(getContext(), 272)
                 , DestinyUtil.dp2px(getContext(), 392));
         if (mLinearLayout.getChildCount() > 0) {

@@ -3,11 +3,13 @@ package com.ktc.media.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.ktc.media.R;
 import com.ktc.media.model.DiskData;
+import com.ktc.media.util.StorageUtil;
 
 public class DiskCardView extends RelativeLayout {
 
@@ -60,6 +62,14 @@ public class DiskCardView extends RelativeLayout {
                 }
             }
         });
+        setOnHoverListener(new OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                requestFocus();
+                requestFocusFromTouch();
+                return true;
+            }
+        });
     }
 
     public void setDiskName(String text) {
@@ -72,6 +82,28 @@ public class DiskCardView extends RelativeLayout {
 
     public void setData(DiskData data) {
         mDiskData = data;
+        initDiskSize(data);
+    }
+
+    private void initDiskSize(final DiskData diskData) {
+        new Thread() {
+            @Override
+            public void run() {
+                String path = diskData.getPath();
+                long totalSize = StorageUtil.getTotalSpace(path);
+                long availableSize = StorageUtil.getAvailSpace(path);
+                String total = StorageUtil.getFileSizeDescription(totalSize);
+                String available = StorageUtil.getFileSizeDescription(availableSize);
+                final String result = getResources().getString(R.string.str_disk_last_memory) + " " + available
+                        + "/" + total;
+                DiskCardView.this.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setDiskLastMemory(result);
+                    }
+                });
+            }
+        }.start();
     }
 
     public DiskData getDiskData() {

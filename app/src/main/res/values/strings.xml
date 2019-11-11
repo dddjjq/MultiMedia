@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KTCMedia</string>
+    <string name="app_name">多媒体</string>
     <string name="str_disk_list">磁盘列表</string>
     <string name="str_picture_title">图片</string>
     <string name="str_music_title">音乐</string>
@@ -72,7 +72,7 @@
     <string name="video_media_error_license_expired">授权许可过期</string>
 
     <string name="disk_eject">磁盘已移除</string>
-    <string name="show_info">播放错误 </string>
+    <string name="show_info">播放错误</string>
     <string name="exit_ok">确定</string>
     <string name="exit_cancel">取消</string>
     <string name="exit_title">警告</string>
@@ -103,10 +103,8 @@
     <string name="can_not_decode_previous">上一张图片过大，不能解析!</string>
     <string name="can_not_decode_next">下一张图片过大，不能解析!</string>
     <string name="current_pic">当前的图片为:</string>
-    <string name="is_setting_wallpaper">正在设置墙纸，请稍后。。。</string>
     <string name="picture_can_not_decode">该图片不能解析!</string>
-    <string name="picture_decoding">图片正在解析。。。</string>
-    <string name="picture_wallpaper">正在设置壁纸。。。</string>
+    <string name="picture_decoding">图片正在解析...</string>
     <string name="picture_decode_failed">图片解析出错!</string>
     <string name="picture_can_not_set3d">不是3D图片!</string>
     <string name="picture_playing_time">幻灯片间隔时间</string>
@@ -136,7 +134,7 @@
     <string name="video_sub_no_support_fullscreen_in_4K2K">Video sub do not support fullscreen in 4K2K!</string>
     <string name="video_display_previous_video_last_frame">Because the video only has audio, it displays the last frame of previous video in video seamless playback!!</string>
     <string name="video_no_support_two_4k">不支持两个4k video同时播放.</string>
-    <string name="buffering">此视频正在缓冲，请等待。。。</string>
+    <string name="buffering">此视频正在缓冲，请等待...</string>
     <string name="video_iso_tip">ISO文件不支持</string>
     <string name="choose_time_failed">该视频不能精确定位!!</string>
     <string name="video_media_play_next">继续播放下一个视频？</string>

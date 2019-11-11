@@ -12,6 +12,7 @@ import com.ktc.media.menu.entity.MinorType;
 import com.ktc.media.menu.view.MinorMenuView;
 import com.ktc.media.model.FileData;
 import com.ktc.media.tv.picture.PictureModeManager;
+import com.ktc.media.util.FileSizeUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -75,9 +76,17 @@ public class ImageMinorHolder {
     private MinorMenuEntity getSizeEntity() {
         MinorMenuEntity minorMenuEntity = new MinorMenuEntity();
         minorMenuEntity.setTextString(mResources.getString(R.string.picture_info_size)
-                + " " + mFileData.getSizeDescription());
+                + " " + getSizeDescription(mFileData));
         minorMenuEntity.setType(MinorType.TYPE_NORMAL);
         return minorMenuEntity;
+    }
+
+    private String getSizeDescription(FileData fileData) {
+        File file = new File(fileData.getPath());
+        if (file.exists()) {
+            return FileSizeUtil.getFileSizeDescription(file.getAbsolutePath());
+        }
+        return null;
     }
 
     private MinorMenuEntity getFormatEntity() {

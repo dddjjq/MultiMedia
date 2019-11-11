@@ -73,9 +73,9 @@ public class MinorMenuFragment extends BaseMenuFragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
+        super.onDestroyView();
         mMajorMenuView.requestFocus();
-        super.onDestroy();
     }
 
     //初始化Container位置

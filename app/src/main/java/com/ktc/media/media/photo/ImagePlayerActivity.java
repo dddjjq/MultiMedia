@@ -79,11 +79,8 @@
 package com.ktc.media.media.photo;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -100,7 +97,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -121,6 +117,7 @@ import com.ktc.media.media.util.PlaylistTool;
 import com.ktc.media.media.util.ToastFactory;
 import com.ktc.media.media.util.Tools;
 import com.ktc.media.media.view.MediaControllerView;
+import com.ktc.media.media.view.MessageDialog;
 import com.ktc.media.media.view.OnListItemClickListener;
 import com.ktc.media.media.view.PictureListDialog;
 import com.ktc.media.menu.base.BaseMenuActivity;
@@ -192,7 +189,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
     private List<FileData> mPhotoFileList = new ArrayList<>();
 
     // Video buffer progress bar
-    private ProgressDialog mProgressDialog;
+    private MessageDialog mProgressDialog;
 
     // Disk pull plug monitor
     private DiskChangeReceiver mDiskChangeReceiver;
@@ -220,6 +217,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
     public float mMinZoomOutTimes = 0.4f;
 
     private float mRotateAngle = 0f;
+    private int mRotateTimes = 0;
 
     // screen resolution
     private int mWindowResolutionWidth = 0;
@@ -305,8 +303,10 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
                             }
                         } else {
                             moveNextOrPrevious(1);
-                            mHandler.removeMessages(PPT_PLAYER);
-                            mHandler.sendEmptyMessageDelayed(PPT_PLAYER, slideTime);
+                            if (!checkIfItIsGifPhoto(0)) {
+                                mHandler.removeMessages(PPT_PLAYER);
+                                mHandler.sendEmptyMessageDelayed(PPT_PLAYER, slideTime);
+                            }
                         }
                     }
                     break;
@@ -344,7 +344,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
                     mPhotoPlayerHolder.mMediaControllerView.setTitleText(mPhotoFileList.get(mCurrentPosition).getName());
                     break;
                 case SHOW_TOAST:
-                    showToast(getString(msg.arg1), Gravity.CENTER, Toast.LENGTH_SHORT);
+                    showToast(getString(msg.arg1), Toast.LENGTH_SHORT);
                     break;
                 default:
                     break;
@@ -500,7 +500,6 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
         // Close file resources
         closeSilently(mFileInputStream);
         closeSilently(is);
-
         super.onPause();
     }
 
@@ -614,26 +613,26 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
         dismissProgressDialog();
         // Prevent activity died when the popup menu
         if (!isFinishing()) {
-            new AlertDialog.Builder(ImagePlayerActivity.this)
-                    .setTitle(getResources().getString(R.string.show_info))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setMessage(strMessage)
-                    .setPositiveButton(getResources().getString(R.string.exit_ok),
-                            new AlertDialog.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    isErrorDialogShow = false;
-                                    moveNextOrPrevious(1);
-                                }
-                            })
-                    .setNegativeButton(getResources().getString(R.string.exit_cancel),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    isErrorDialogShow = false;
-                                    ImagePlayerActivity.this.finish();
-                                }
-                            }).setCancelable(false).show();
+            MessageDialog messageDialog = new MessageDialog(this, R.style.MessageDialog);
+            MessageDialog.Builder builder = new MessageDialog.Builder(messageDialog);
+            builder.setMessageText(getResources().getString(R.string.show_info))
+                    .setIsLoading(false)
+                    .setDialogSize(500, 300)
+                    .setContentText(strMessage)
+                    .setButtonClickListener(new MessageDialog.OnDialogButtonClickListener() {
+                        @Override
+                        public void onNegativeClick() {
+                            isErrorDialogShow = false;
+                            ImagePlayerActivity.this.finish();
+                        }
+
+                        @Override
+                        public void onPositiveClick() {
+                            isErrorDialogShow = false;
+                            moveNextOrPrevious(1);
+                        }
+                    });
+            messageDialog.show();
             isErrorDialogShow = true;
         }
     }
@@ -772,12 +771,27 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             case KeyEvent.KEYCODE_MEDIA_PLAY:
                 if (!mPPTPlayer) {
                     PlayProcess();
+                    mPhotoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
                 }
                 return true;
             case KeyEvent.KEYCODE_MEDIA_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_STOP:
                 if (mPPTPlayer) {
                     stopPPTPlayer();
+                    mPhotoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
+                }
+            case KeyEvent.KEYCODE_MEDIA_STOP:
+                mPhotoFileList.clear();
+                finish();
+                return true;
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                if (mPPTPlayer) {
+                    stopPPTPlayer();
+                    mPhotoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
+                    hideControlDelay();
+                } else {
+                    PlayProcess();
+                    mPhotoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
+                    hideControlDelay();
                 }
                 return true;
             case KeyEvent.KEYCODE_MENU:
@@ -815,6 +829,12 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
         }
     }
 
+    private void listDialogSkipToNextOrBefore(int delta) {
+        if (mPictureListDialog != null && mPictureListDialog.isShowing()) {
+            mPictureListDialog.skipToNextOrBeforeThumb(delta);
+        }
+    }
+
     private void PlayProcess() {
         if (mPPTPlayer) {
             // If is playing.
@@ -838,11 +858,11 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             stopPPTPlayer();
         }
         if (mZoomTimes >= mMaxZoomInTimes) {
-            showToast(getString(R.string.max_tip), Gravity.CENTER, 500);
+            showToast(getString(R.string.max_tip), 500);
             return;
         }
         if (mZoomThread.isAlive()) {
-            showToast(getString(R.string.photo_zooming), Gravity.CENTER, 500);
+            showToast(getString(R.string.photo_zooming), 500);
             return;
         }
         mZoomTimes += 0.2;
@@ -859,11 +879,11 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             stopPPTPlayer();
         }
         if (mZoomTimes < mMinZoomOutTimes) {
-            showToast(getString(R.string.min_tip), Gravity.CENTER, 500);
+            showToast(getString(R.string.min_tip), 500);
             return;
         }
         if (mZoomThread.isAlive()) {
-            showToast(getString(R.string.photo_zooming), Gravity.CENTER, 500);
+            showToast(getString(R.string.photo_zooming), 500);
             return;
         }
         mZoomTimes -= 0.2;
@@ -883,7 +903,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             mRotateAngle = 0;
         mRotateAngle -= 90;
         if (mRotateThread.isAlive()) {
-            showToast(getString(R.string.photo_rotating), Gravity.CENTER, 500);
+            showToast(getString(R.string.photo_rotating), 500);
             return;
         }
         mRotateThread = new Thread(new Runnable() {
@@ -903,7 +923,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             mRotateAngle = 0;
         mRotateAngle += 90;
         if (mRotateThread.isAlive()) {
-            showToast(getString(R.string.photo_rotating), Gravity.CENTER, 500);
+            showToast(getString(R.string.photo_rotating), 500);
             return;
         }
         mRotateThread = new Thread(new Runnable() {
@@ -913,6 +933,18 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             }
         });
         mRotateThread.start();
+        if (mRotateTimes >= 4 || mRotateTimes <= -4) {
+            mRotateTimes = 0;
+        }
+        mRotateTimes++;
+        String angle;
+        if (mRotateTimes > 0) {
+            angle = mRotateTimes * 90 + "";
+            showToastAtBottom(angle);
+        } else {
+            angle = mRotateTimes * 90 + "";
+            showToastAtBottom(angle);
+        }
     }
 
     private MediaControllerView.OnControllerClickListener mControllerClickListener =
@@ -1125,7 +1157,6 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
                 mPhotoPlayerHolder.mMediaControllerView.setTitleText(mPhotoFileList.get(mCurrentPosition).getName());
             }
         });
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1137,15 +1168,15 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
                     isDecodeSuccess = mPhotoPlayerHolder.mSurfaceView.decodeBitmapFromNet(url,
                             ImagePlayerActivity.this);
                 }
-
                 if (isDecodeSuccess) {
                     mHandler.sendEmptyMessage(PHOTO_DECODE_FINISH);
-
                     if (mPhotoPlayerHolder.mSurfaceView.getFrameCount() > 1) {
                         mPhotoPlayerHolder.mSurfaceView.setStart(mGifCallBack);
                     } else {
                         if (mPPTPlayer) {
+                            mHandler.removeMessages(PPT_PLAYER);
                             mHandler.sendEmptyMessageDelayed(PPT_PLAYER, slideTime);
+                            listDialogSkipToNextOrBefore(1);
                         }
                     }
                 }
@@ -1351,15 +1382,15 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
     }
 
     public void showToastAtCenter(String text) {
-        showToast(text, Gravity.CENTER, Toast.LENGTH_SHORT);
+        showToast(text, Toast.LENGTH_SHORT);
     }
 
     private void showToastAtBottom(String text) {
-        showToast(text, Gravity.BOTTOM, Toast.LENGTH_SHORT);
+        showToast(text, Toast.LENGTH_SHORT);
     }
 
-    private void showToast(final String text, int gravity, int duration) {
-        ToastFactory.showToast(ImagePlayerActivity.this, text, gravity);
+    private void showToast(final String text, int duration) {
+        ToastFactory.showToast(ImagePlayerActivity.this, text, duration);
     }
 
     private void closeSilently(final Closeable c) {
@@ -1466,6 +1497,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
         }
         mCurrentPosition = position;
         mHandler.sendEmptyMessage(PHOTO_NAME_UPDATE);
+        listDialogSkipToNextOrBefore(delta);
     }
 
     public String getNextPhotoPath(int delta) {
@@ -1499,6 +1531,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
     public void initParameterBeforeShowNextPhoto() {
         mZoomTimes = 1.0f;
         mRotateAngle = 0f;
+        mRotateTimes = 0;
     }
 
     /**
@@ -1519,8 +1552,7 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
                 position = 0;
             }
         }
-        mZoomTimes = 1.0f;
-        mRotateAngle = 0f;
+        initParameterBeforeShowNextPhoto();
         String url = mPhotoFileList.get(position).getPath();
         url = Tools.fixPath(url);
         if (url.substring(url.lastIndexOf(".") + 1).equalsIgnoreCase(Constants.GIF)) {
@@ -1534,6 +1566,10 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
             if (!mPhotoPlayerHolder.mSurfaceView
                     .startNextVideo(url, ImagePlayerActivity.this)) {
                 showToastAtCenter(getString(R.string.busy_tip));
+            } else {
+                if (mPPTPlayer) {
+                    listDialogSkipToNextOrBefore(1);
+                }
             }
         }
         mPhotoPlayerHolder.mMediaControllerView.setTitleText(mPhotoFileList.get(mCurrentPosition).getName());
@@ -1624,9 +1660,11 @@ public class ImagePlayerActivity extends BaseMenuActivity implements OnClickList
      */
     private void showProgressDialog(int id) {
         if (!isFinishing()) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(id));
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog = new MessageDialog(this, R.style.MessageDialog);
+            MessageDialog.Builder builder = new MessageDialog.Builder(mProgressDialog);
+            builder.setMessageText(getResources().getString(id))
+                    .setIsLoading(true)
+                    .setDialogSize(500, 150);
             if (!mProgressDialog.isShowing()) {
                 mProgressDialog.show();
             }

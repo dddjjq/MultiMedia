@@ -1,6 +1,8 @@
 package com.ktc.media.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ktc.media.R;
+import com.ktc.media.data.ThreadPoolManager;
 import com.ktc.media.model.BaseData;
 import com.ktc.media.model.FileData;
 import com.ktc.media.util.FileIconUtil;
@@ -15,6 +18,8 @@ import com.ktc.media.view.MediaLinearItemView;
 import com.ktc.media.view.OnItemClickListener;
 import com.ktc.media.view.OnItemFocusListener;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class FileLinearListAdapter extends RecyclerView.Adapter<FileLinearListAdapter.ViewHolder>
@@ -41,7 +46,7 @@ public class FileLinearListAdapter extends RecyclerView.Adapter<FileLinearListAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         viewHolder.mMediaLinearItemView.setTitle(mDataList.get(i).getName());
         viewHolder.mMediaLinearItemView.setContent(mDataList.get(i).getSizeDescription());
         viewHolder.mMediaLinearItemView.setData(mDataList.get(i));
@@ -52,6 +57,12 @@ public class FileLinearListAdapter extends RecyclerView.Adapter<FileLinearListAd
         if (spanText != null) {
             viewHolder.mMediaLinearItemView.setSpanText(spanText);
         }
+        loadFileSize(mDataList.get(i), new OnFileSizeLoadListener() {
+            @Override
+            public void onFileSizeLoad(String description) {
+                viewHolder.mMediaLinearItemView.setContent(description);
+            }
+        });
     }
 
     @Override
@@ -103,6 +114,10 @@ public class FileLinearListAdapter extends RecyclerView.Adapter<FileLinearListAd
         }
     }
 
+    public void release() {
+
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         MediaLinearItemView mMediaLinearItemView;
@@ -111,5 +126,40 @@ public class FileLinearListAdapter extends RecyclerView.Adapter<FileLinearListAd
             super(itemView);
             mMediaLinearItemView = (MediaLinearItemView) itemView.findViewById(R.id.file_linear_list_item);
         }
+    }
+
+    private void loadFileSize(final FileData fileData, final OnFileSizeLoadListener onFileSizeLoadListener) {
+
+        if (fileData.getSizeDescription() != null) {
+            onFileSizeLoadListener.onFileSizeLoad(fileData.getSizeDescription());
+            return;
+        }
+
+        @SuppressWarnings("HandlerLeak") final Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String description = (String) msg.obj;
+                onFileSizeLoadListener.onFileSizeLoad(description);
+            }
+        };
+
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                File f = new File(fileData.getPath());
+                if (!f.exists()) return;
+                long time = f.lastModified();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+                String description = dateFormat.format(time);
+                fileData.setSizeDescription(description);
+                Message message = mHandler.obtainMessage();
+                message.obj = description;
+                mHandler.sendMessage(message);
+            }
+        });
+    }
+
+    private interface OnFileSizeLoadListener {
+        void onFileSizeLoad(String description);
     }
 }

@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,9 @@ public class FlyBorderView extends View {
     public void attachToView(View newFocus, float xScale, float yScale) {
         setVisibility(VISIBLE);
         View v = newFocus;
+        if (v instanceof RecyclerView) {
+            return;
+        }
         int left = v.getLeft();
         int top = v.getTop();
         while (!(v.getParent() instanceof FileListContainer)) {

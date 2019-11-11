@@ -34,7 +34,7 @@ public class MusicMajorHolder extends BaseEntityHolder {
     public void init() {
         initInfoEntity();
         initSoundModeEntity();
-        initSettingEntity();
+        //initSettingEntity();
         initRepeatEntity();
     }
 

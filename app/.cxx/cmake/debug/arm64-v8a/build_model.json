@@ -1,0 +1,70 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as",
+      "sdkFolder": "E:\\android_studio_sdk",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\build\\intermediates",
+      "gradleModulePathName": ":app",
+      "moduleRootFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app",
+      "makeFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\.cxx",
+      "cxxFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx",
+      "ndkFolder": "E:\\android_studio_sdk\\ndk\\20.1.5948944",
+      "ndkVersion": "20.1.5948944",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "debug",
+    "soFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\build\\intermediates\\cmake\\debug\\lib",
+    "objFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\build\\intermediates\\cmake\\debug\\obj",
+    "jsonFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug",
+    "gradleBuildOutputFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug",
+    "isDebuggableEnabled": true,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARM64_V8A",
+  "abiPlatformVersion": 26,
+  "cxxBuildFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a",
+  "jsonFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a\\android_gradle_build.json",
+  "gradleBuildOutputFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a",
+  "objFolder": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a",
+  "buildCommandFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a\\build_command.txt",
+  "buildOutputFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a\\build_output.txt",
+  "modelOutputFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a\\build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\CMakeLists.txt",
+    "toolchainWrapperFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\build_generation_state.json",
+    "cacheKeyFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\compiler_cache_key.json",
+    "compilerCacheUseFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\compiler_cache_use.json",
+    "compilerCacheWriteFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cxx\\debug\\arm64-v8a\\compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a\\json_generation_record.json",
+  "compileCommandsJsonFile": "F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\debug\\arm64-v8a\\compile_commands.json"
+}

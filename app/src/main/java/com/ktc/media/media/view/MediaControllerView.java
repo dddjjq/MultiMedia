@@ -82,6 +82,7 @@ public class MediaControllerView extends RelativeLayout implements View.OnClickL
         zoomInBtn = (ImageView) findViewById(R.id.media_zoom_in_btn);
         rotateBtn = (ImageView) findViewById(R.id.media_rotate_btn);
         settingBtn = (ImageView) findViewById(R.id.media_setting_btn);
+        titleText.setSelected(true);
     }
 
     private void changeGroup(boolean isPicture) {

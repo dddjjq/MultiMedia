@@ -82,10 +82,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Toast;
 
 import com.ktc.media.R;
 import com.ktc.media.media.util.ToastFactory;
@@ -142,7 +142,7 @@ public class MusicPlayerListener implements View.OnClickListener, MediaControlle
                 mMusicPlayerActivity.seekTo(position);
             } else {
                 String strMessage = "This operation is not supported !";
-                ToastFactory.showToast(mMusicPlayerActivity, strMessage, Gravity.CENTER);
+                ToastFactory.showToast(mMusicPlayerActivity, strMessage, Toast.LENGTH_SHORT);
             }
         }
 
@@ -165,7 +165,7 @@ public class MusicPlayerListener implements View.OnClickListener, MediaControlle
                     mMusicPlayerActivity.musicPlayHandle.sendEmptyMessage(HANDLE_MESSAGE_SEEKBAR_UPDATE);
                 } else {
                     String strMessage = "This operation is not supported !";
-                    ToastFactory.showToast(mMusicPlayerActivity, strMessage, Gravity.CENTER);
+                    ToastFactory.showToast(mMusicPlayerActivity, strMessage, Toast.LENGTH_SHORT);
                 }
             }
         }

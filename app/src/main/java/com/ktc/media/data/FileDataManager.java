@@ -33,6 +33,9 @@ public class FileDataManager {
 
     private volatile static FileDataManager instance;
 
+    private List<String[]> typeList;
+    private List<Integer> types;
+
     public static FileDataManager getInstance(Context context) {
         if (instance == null) {
             synchronized (FileDataManager.class) {
@@ -48,23 +51,45 @@ public class FileDataManager {
         mContext = context;
         typeMap = new HashMap<>();
         init();
+        initFileTypeResource();
     }
 
     private void init() {
-        typeMap.put(Constants.FILE_TYPE_FILE, DBHelper.TB_FILE);
         typeMap.put(Constants.FILE_TYPE_VIDEO, DBHelper.TB_VIDEO);
         typeMap.put(Constants.FILE_TYPE_MUSIC, DBHelper.TB_MUSIC);
         typeMap.put(Constants.FILE_TYPE_PICTURE, DBHelper.TB_PICTURE);
     }
 
-    public int getCountByType(int type) {
-        diskPaths = StorageUtil.getMountedDisksList(mContext);
-        return DatabaseUtil.getInstance(mContext).getAllData(typeMap.get(type)).size();
-    }
-
-    public List<BaseData> getDataByType(int type) {
-        List<BaseData> dataList = DatabaseUtil.getInstance(mContext).getAllData(typeMap.get(type));
-        return getCollectList(dataList);
+    private void initFileTypeResource() {
+        typeList = new ArrayList<>();
+        types = new ArrayList<>();
+        String[] videoTypes = mContext.getResources().getStringArray(R.array.video_filter);
+        String[] pictureTypes = mContext.getResources().getStringArray(R.array.picture_filter);
+        String[] musicTypes = mContext.getResources().getStringArray(R.array.audio_filter);
+        String[] docTypes = mContext.getResources().getStringArray(R.array.doc_filter);
+        String[] pdfTypes = mContext.getResources().getStringArray(R.array.pdf_filter);
+        String[] pptTypes = mContext.getResources().getStringArray(R.array.ppt_filter);
+        String[] txtTypes = mContext.getResources().getStringArray(R.array.txt_filter);
+        String[] xlsTypes = mContext.getResources().getStringArray(R.array.xls_filter);
+        String[] apkTypes = mContext.getResources().getStringArray(R.array.apk_filter);
+        typeList.add(videoTypes);
+        typeList.add(pictureTypes);
+        typeList.add(musicTypes);
+        typeList.add(docTypes);
+        typeList.add(pdfTypes);
+        typeList.add(pptTypes);
+        typeList.add(txtTypes);
+        typeList.add(xlsTypes);
+        typeList.add(apkTypes);
+        types.add(Constants.FILE_TYPE_VIDEO);
+        types.add(Constants.FILE_TYPE_PICTURE);
+        types.add(Constants.FILE_TYPE_MUSIC);
+        types.add(Constants.FILE_TYPE_DOC);
+        types.add(Constants.FILE_TYPE_PDF);
+        types.add(Constants.FILE_TYPE_PPT);
+        types.add(Constants.FILE_TYPE_TXT);
+        types.add(Constants.FILE_TYPE_XLS);
+        types.add(Constants.FILE_TYPE_APK);
     }
 
     public List<VideoData> getAllVideoData() {
@@ -96,8 +121,8 @@ public class FileDataManager {
                 videoDataIterator.remove();
             }
         }
-        if (dataList.size() == 0) {//避免当前还未扫描到文件的情况
-            List<FileData> pathFileDataList = getPathFileData(path.substring(0, path.lastIndexOf("/")));
+        if (dataList.size() == 0) {
+            List<FileData> pathFileDataList = getPathFileDataWithOutSize(path.substring(0, path.lastIndexOf("/")));
             List<VideoData> videoList = new ArrayList<>();
             for (FileData fd : pathFileDataList) {
                 if (fd.getType() == Constants.FILE_TYPE_VIDEO) {
@@ -129,7 +154,7 @@ public class FileDataManager {
             }
         }
         if (dataList.size() == 0) {
-            List<FileData> pathFileDataList = getPathFileData(path.substring(0, path.lastIndexOf("/")));
+            List<FileData> pathFileDataList = getPathFileDataWithOutSize(path.substring(0, path.lastIndexOf("/")));
             List<MusicData> musicList = new ArrayList<>();
             for (FileData fd : pathFileDataList) {
                 if (fd.getType() == Constants.FILE_TYPE_MUSIC) {
@@ -162,18 +187,17 @@ public class FileDataManager {
             }
         }
         if (dataList.size() == 0) {
-            List<FileData> pathFileDataList = getPathFileData(path.substring(0, path.lastIndexOf("/")));
+            List<FileData> pathFileDataList = getPathFileDataWithOutSize(path.substring(0, path.lastIndexOf("/")));
             List<FileData> pictureList = new ArrayList<>();
             for (FileData fd : pathFileDataList) {
                 if (fd.getType() == Constants.FILE_TYPE_PICTURE) {
                     File file = new File(fd.getPath());
                     BigInteger size = BigInteger.valueOf(file.length());
-                    if (size.compareTo(BigInteger.valueOf(1024 * 10)) > 0) {//只扫描大于10KB的图片
+                    if (size.compareTo(BigInteger.valueOf(1024 * 10)) > 0) {
                         FileData fileData = new FileData();
                         fileData.setPath(file.getAbsolutePath());
                         fileData.setType(Constants.FILE_TYPE_PICTURE);
                         fileData.setName(file.getName());
-                        fileData.setSizeDescription(FileSizeUtil.getFileSizeDescription(file.getAbsolutePath()));
                         pictureList.add(fileData);
                     }
                 }
@@ -185,23 +209,23 @@ public class FileDataManager {
         return dataList;
     }
 
-    public List<FileData> getAllFileData(String path) {
-        List<FileData> dataList = DatabaseUtil.getInstance(mContext).getAllFileData();
-        Iterator<FileData> dataIterator = dataList.iterator();
-        while (dataIterator.hasNext()) {
-            FileData fileData = dataIterator.next();
-            if (!fileData.getPath().contains(path)) {
-                dataIterator.remove();
+    public List<FileData> getPathFileDataWithOutSize(String path) {
+        File file = new File(path);
+        List<FileData> fileDataList = new ArrayList<>();
+        if (file.exists()) {
+            if (file.isDirectory()) {
+                File[] fileList = file.listFiles();
+                for (File f : fileList) {
+                    FileData fileData = new FileData();
+                    fileData.setName(f.getName());
+                    fileData.setType(getFileType(f));
+                    fileData.setPath(f.getAbsolutePath());
+                    fileDataList.add(fileData);
+                }
             }
         }
-        Collections.sort(dataList, new DataComparator<>());
-        return dataList;
-    }
-
-    public List<FileData> getAllFileData() {
-        List<FileData> dataList = DatabaseUtil.getInstance(mContext).getAllFileData();
-        Collections.sort(dataList, new DataComparator<>());
-        return dataList;
+        Collections.sort(fileDataList, new DataComparator<>());
+        return fileDataList;
     }
 
     public List<FileData> getPathFileData(String path) {
@@ -238,35 +262,6 @@ public class FileDataManager {
     }
 
     private int getFileType(File file) {
-        String[] videoTypes = mContext.getResources().getStringArray(R.array.video_filter);
-        String[] pictureTypes = mContext.getResources().getStringArray(R.array.picture_filter);
-        String[] musicTypes = mContext.getResources().getStringArray(R.array.audio_filter);
-        String[] docTypes = mContext.getResources().getStringArray(R.array.doc_filter);
-        String[] pdfTypes = mContext.getResources().getStringArray(R.array.pdf_filter);
-        String[] pptTypes = mContext.getResources().getStringArray(R.array.ppt_filter);
-        String[] txtTypes = mContext.getResources().getStringArray(R.array.txt_filter);
-        String[] xlsTypes = mContext.getResources().getStringArray(R.array.xls_filter);
-        String[] apkTypes = mContext.getResources().getStringArray(R.array.apk_filter);
-        List<String[]> typeList = new ArrayList<>();
-        typeList.add(videoTypes);
-        typeList.add(pictureTypes);
-        typeList.add(musicTypes);
-        typeList.add(docTypes);
-        typeList.add(pdfTypes);
-        typeList.add(pptTypes);
-        typeList.add(txtTypes);
-        typeList.add(xlsTypes);
-        typeList.add(apkTypes);
-        List<Integer> types = new ArrayList<>();
-        types.add(Constants.FILE_TYPE_VIDEO);
-        types.add(Constants.FILE_TYPE_PICTURE);
-        types.add(Constants.FILE_TYPE_MUSIC);
-        types.add(Constants.FILE_TYPE_DOC);
-        types.add(Constants.FILE_TYPE_PDF);
-        types.add(Constants.FILE_TYPE_PPT);
-        types.add(Constants.FILE_TYPE_TXT);
-        types.add(Constants.FILE_TYPE_XLS);
-        types.add(Constants.FILE_TYPE_APK);
         for (int i = 0; i < typeList.size(); i++) {
             for (String s : typeList.get(i)) {
                 if (file.getName().toLowerCase().contains(s)) {
@@ -275,7 +270,7 @@ public class FileDataManager {
             }
         }
         if (!file.isDirectory()) {
-            return Constants.FILE_TYPE_UNKNOW;
+            return Constants.FILE_TYPE_UNKNOWN;
         }
         return Constants.FILE_TYPE_DIR;
     }
@@ -304,4 +299,5 @@ public class FileDataManager {
         }
         return result;
     }
+
 }

@@ -28,4 +28,8 @@
     <declare-styleable name="MenuViewContainer">
         <attr name="focusBackGround" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="DialogButton">
+        <attr name="buttonText" format="string" />
+    </declare-styleable>
 </resources>

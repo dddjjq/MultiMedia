@@ -28,7 +28,7 @@ public class PictureListItemView extends RelativeLayout {
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.item_dialog_picture_list_item, this, true);
-        mImageView = findViewById(R.id.picture_item_image);
+        mImageView = (ImageView) findViewById(R.id.picture_item_image);
         addListener();
     }
 

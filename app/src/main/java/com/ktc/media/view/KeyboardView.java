@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 import com.ktc.media.R;
@@ -16,6 +17,7 @@ import com.ktc.media.util.DestinyUtil;
 public class KeyboardView extends RelativeLayout implements OnItemClickListener
         , KeyboardPopDialog.OnPopItemClickListener {
 
+    private Context mContext;
     private KeyboardEditText keyboardEditText;
     private KeyboardItemView clearKey;
     private KeyboardItemView backSpaceKey;
@@ -54,6 +56,7 @@ public class KeyboardView extends RelativeLayout implements OnItemClickListener
     }
 
     private void init(Context context) {
+        mContext = context;
         LayoutInflater.from(context).inflate(R.layout.view_keyboard_layout, this, true);
         findView();
         addListener();
@@ -107,7 +110,7 @@ public class KeyboardView extends RelativeLayout implements OnItemClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (mOnTextChangeListener != null) {
-                    mOnTextChangeListener.onTextChange(keyboardEditText.getText().toString());
+                    mOnTextChangeListener.onTextChange(keyboardEditText.getText().toString().trim());
                 }
             }
 
@@ -218,7 +221,15 @@ public class KeyboardView extends RelativeLayout implements OnItemClickListener
             systemKeyboard.setPointSelect(true);
             keyboardEditText.enableShowSoftInput();
             enableT9Keyboard(false);
+            keyboardEditText.requestFocus();
+            showOrHideIme();
         }
+    }
+
+    @SuppressWarnings("all")
+    public void showOrHideIme() {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public void enableT9Keyboard(boolean enable) {
@@ -273,6 +284,10 @@ public class KeyboardView extends RelativeLayout implements OnItemClickListener
 
     private String getAppendString(String s) {
         return keyboardEditText.getText().toString() + s;
+    }
+
+    public void editTextRequestFocus() {
+        keyboardEditText.requestFocus();
     }
 
     public void clearKeyboard() {

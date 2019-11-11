@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -73,6 +74,14 @@ public class MediaGridItemView extends RelativeLayout {
                 if (mOnItemFocusListener != null) {
                     mOnItemFocusListener.onItemFocusChange(v, hasFocus, mBaseData);
                 }
+            }
+        });
+        setOnHoverListener(new OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                requestFocus();
+                requestFocusFromTouch();
+                return true;
             }
         });
     }

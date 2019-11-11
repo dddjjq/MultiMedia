@@ -39,10 +39,10 @@ public class StorageUtil {
                 path = StringEncoder.convertString(path, "GBK");
             }
             diskData.setPath(path);
-            diskData.setTotalSpace(getTotalSpace(path));
+            /*diskData.setTotalSpace(*//*getTotalSpace(path)*//*0);
             if (diskData.getTotalSpace() != 0) {
-                diskData.setAvailableSpace(getAvailSpace(diskData.getPath()));
-            }
+                diskData.setAvailableSpace(*//*getAvailSpace(diskData.getPath())*//*0);
+            }*/
             if (path.equals(INTERNAL_STORAGE_PATH)) {
                 diskData.setName(context.getString(R.string.str_universal_storage_internal));
             } else {
@@ -60,7 +60,7 @@ public class StorageUtil {
     public static long getTotalSpace(CharSequence path) {
         try {
             StatFs sf = new StatFs((String) path);
-            return ((long) sf.getBlockSize()) * ((long) sf.getBlockCount());
+            return sf.getBlockSizeLong() * sf.getBlockCountLong();
         } catch (Exception e) {
             return 0;
         }
@@ -69,7 +69,7 @@ public class StorageUtil {
     public static long getAvailSpace(CharSequence path) {
         try {
             StatFs sf = new StatFs((String) path);
-            return ((long) sf.getBlockSize()) * ((long) sf.getAvailableBlocks());
+            return sf.getBlockSizeLong() * sf.getAvailableBlocksLong();
         } catch (Exception e) {
             return 0;
         }

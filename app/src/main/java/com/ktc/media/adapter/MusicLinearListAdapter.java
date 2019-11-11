@@ -1,6 +1,8 @@
 package com.ktc.media.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ktc.media.R;
+import com.ktc.media.data.ThreadPoolManager;
 import com.ktc.media.model.BaseData;
 import com.ktc.media.model.MusicData;
+import com.ktc.media.util.Tools;
 import com.ktc.media.view.MediaLinearItemView;
 import com.ktc.media.view.OnItemClickListener;
 import com.ktc.media.view.OnItemFocusListener;
@@ -40,9 +44,8 @@ public class MusicLinearListAdapter extends RecyclerView.Adapter<MusicLinearList
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         viewHolder.mMediaLinearItemView.setTitle(mDataList.get(i).getName());
-        viewHolder.mMediaLinearItemView.setContent(mDataList.get(i).getDurationString());
         viewHolder.mMediaLinearItemView.setData(mDataList.get(i));
         viewHolder.mMediaLinearItemView.setOnItemFocusListener(this);
         viewHolder.mMediaLinearItemView.setOnItemClickListener(this);
@@ -50,6 +53,12 @@ public class MusicLinearListAdapter extends RecyclerView.Adapter<MusicLinearList
         if (spanText != null) {
             viewHolder.mMediaLinearItemView.setSpanText(spanText);
         }
+        loadSongInfo(mDataList.get(i), new OnSongInfoLoadListener() {
+            @Override
+            public void onSongInfoLoaded(String duration) {
+                viewHolder.mMediaLinearItemView.setContent(duration);
+            }
+        });
     }
 
     @Override
@@ -97,6 +106,10 @@ public class MusicLinearListAdapter extends RecyclerView.Adapter<MusicLinearList
         }
     }
 
+    public void release() {
+
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         MediaLinearItemView mMediaLinearItemView;
@@ -109,5 +122,36 @@ public class MusicLinearListAdapter extends RecyclerView.Adapter<MusicLinearList
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    private void loadSongInfo(final MusicData musicData, final OnSongInfoLoadListener onSongInfoLoadListener) {
+
+        if (musicData.getDurationString() != null && musicData.getSongName() != null) {
+            onSongInfoLoadListener.onSongInfoLoaded(musicData.getDurationString());
+            return;
+        }
+
+        @SuppressWarnings("HandlerLeak") final Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String description = (String) msg.obj;
+                onSongInfoLoadListener.onSongInfoLoaded(description);
+            }
+        };
+
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                String duration = Tools.getDurationString(musicData.getPath());
+                musicData.setDurationString(duration);
+                Message message = mHandler.obtainMessage();
+                message.obj = duration;
+                mHandler.sendMessage(message);
+            }
+        });
+    }
+
+    private interface OnSongInfoLoadListener {
+        void onSongInfoLoaded(String duration);
     }
 }

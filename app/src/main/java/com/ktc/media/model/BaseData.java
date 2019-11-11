@@ -9,6 +9,7 @@ public class BaseData implements Parcelable {
     private String name;
     private String date;
     private int type;
+    private long fileSize;
 
     public BaseData() {
 
@@ -19,6 +20,7 @@ public class BaseData implements Parcelable {
         name = in.readString();
         date = in.readString();
         type = in.readInt();
+        fileSize = in.readLong();
     }
 
     public static final Creator<BaseData> CREATOR = new Creator<BaseData>() {
@@ -65,6 +67,14 @@ public class BaseData implements Parcelable {
         this.type = type;
     }
 
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long size) {
+        this.fileSize = size;
+    }
+
     @Override
     public boolean equals(Object obj) {
         BaseData baseData = (BaseData) obj;
@@ -85,5 +95,6 @@ public class BaseData implements Parcelable {
         dest.writeString(name);
         dest.writeString(date);
         dest.writeInt(type);
+        dest.writeLong(fileSize);
     }
 }

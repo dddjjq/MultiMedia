@@ -1,6 +1,8 @@
 package com.ktc.media.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ktc.media.R;
+import com.ktc.media.data.ThreadPoolManager;
 import com.ktc.media.model.BaseData;
 import com.ktc.media.model.VideoData;
+import com.ktc.media.util.Tools;
 import com.ktc.media.view.MediaLinearItemView;
 import com.ktc.media.view.OnItemClickListener;
 import com.ktc.media.view.OnItemFocusListener;
@@ -40,9 +44,8 @@ public class VideoLinearListAdapter extends RecyclerView.Adapter<VideoLinearList
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         viewHolder.mMediaLinearItemView.setTitle(mDataList.get(i).getName());
-        viewHolder.mMediaLinearItemView.setContent(mDataList.get(i).getDurationString());
         viewHolder.mMediaLinearItemView.setData(mDataList.get(i));
         viewHolder.mMediaLinearItemView.setOnItemFocusListener(this);
         viewHolder.mMediaLinearItemView.setOnItemClickListener(this);
@@ -50,6 +53,12 @@ public class VideoLinearListAdapter extends RecyclerView.Adapter<VideoLinearList
         if (spanText != null) {
             viewHolder.mMediaLinearItemView.setSpanText(spanText);
         }
+        loadDurationString(mDataList.get(i), new OnDurationLoadListener() {
+            @Override
+            public void onDurationLoaded(String description) {
+                viewHolder.mMediaLinearItemView.setContent(description);
+            }
+        });
     }
 
     @Override
@@ -75,6 +84,10 @@ public class VideoLinearListAdapter extends RecyclerView.Adapter<VideoLinearList
         if (mOnItemFocusListener != null) {
             mOnItemFocusListener.onItemFocusChange(view, hasFocus, data);
         }
+    }
+
+    public void release() {
+
     }
 
     public void setSpanText(String text) {
@@ -109,5 +122,36 @@ public class VideoLinearListAdapter extends RecyclerView.Adapter<VideoLinearList
             super(itemView);
             mMediaLinearItemView = (MediaLinearItemView) itemView.findViewById(R.id.video_linear_list_item);
         }
+    }
+
+    private void loadDurationString(final VideoData videoData, final OnDurationLoadListener onDurationLoadListener) {
+
+        if (videoData.getDurationString() != null) {
+            onDurationLoadListener.onDurationLoaded(videoData.getDurationString());
+            return;
+        }
+
+        @SuppressWarnings("HandlerLeak") final Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String durationString = (String) msg.obj;
+                onDurationLoadListener.onDurationLoaded(durationString);
+            }
+        };
+
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                String duration = Tools.getDurationString(videoData.getPath());
+                videoData.setDurationString(duration);
+                Message message = mHandler.obtainMessage();
+                message.obj = duration;
+                mHandler.sendMessage(message);
+            }
+        });
+    }
+
+    private interface OnDurationLoadListener {
+        void onDurationLoaded(String description);
     }
 }

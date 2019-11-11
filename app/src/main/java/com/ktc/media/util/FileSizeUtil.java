@@ -32,7 +32,7 @@ public class FileSizeUtil {
                     size += f.length();
                 }
             }
-        } catch (Exception e) {
+        } catch (OutOfMemoryError e) {
             e.printStackTrace();
         }
         return size;

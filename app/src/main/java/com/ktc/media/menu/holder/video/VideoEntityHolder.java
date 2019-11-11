@@ -32,10 +32,10 @@ public class VideoEntityHolder extends BaseEntityHolder {
 
     public void init() {
         initInfoEntity();
-        initZoomEntity();
+        //initZoomEntity();
         initPictureEntity();
         initSoundEntity();
-        initSettingEntity();
+        //initSettingEntity();
         initRepeatEntity();
     }
 

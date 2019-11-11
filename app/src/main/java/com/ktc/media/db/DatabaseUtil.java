@@ -2,16 +2,16 @@ package com.ktc.media.db;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ktc.media.constant.Constants;
 import com.ktc.media.model.BaseData;
 import com.ktc.media.model.FileData;
 import com.ktc.media.model.MusicData;
 import com.ktc.media.model.VideoData;
+import com.ktc.media.scan.observe.FileObserverInstance;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +38,15 @@ public class DatabaseUtil {
         return instance;
     }
 
+    public void insertData(ContentValues contentValues, String tableName) {
+        sqLiteDatabase.insert(tableName, null, contentValues);
+    }
+
     public void insertVideoData(VideoData videoData) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.NAME_KEY, videoData.getName());
         contentValues.put(DBHelper.PATH_KEY, videoData.getPath());
         contentValues.put(DBHelper.TYPE_KEY, videoData.getType());
-        contentValues.put(DBHelper.DURATION_KEY, videoData.getDurationString());
         sqLiteDatabase.insert(DBHelper.TB_VIDEO, null, contentValues);
     }
 
@@ -51,13 +54,13 @@ public class DatabaseUtil {
         Cursor cursor = sqLiteDatabase.query(DBHelper.TB_VIDEO, null, null,
                 null, null, null, null);
         ArrayList<VideoData> mainDatas = new ArrayList<>();
+        if (cursor == null) return null;
         while (cursor.moveToNext()) {
-            VideoData videoData = new VideoData();
-            videoData.setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
-            videoData.setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
-            videoData.setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
-            videoData.setDurationString(cursor.getString(cursor.getColumnIndex(DBHelper.DURATION_KEY)));
-            mainDatas.add(videoData);
+            WeakReference<VideoData> videoDataWeakReference = new WeakReference<>(new VideoData());
+            videoDataWeakReference.get().setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
+            videoDataWeakReference.get().setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
+            videoDataWeakReference.get().setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
+            mainDatas.add(videoDataWeakReference.get());
         }
         cursor.close();
         return mainDatas;
@@ -68,8 +71,6 @@ public class DatabaseUtil {
         contentValues.put(DBHelper.NAME_KEY, musicData.getName());
         contentValues.put(DBHelper.PATH_KEY, musicData.getPath());
         contentValues.put(DBHelper.TYPE_KEY, musicData.getType());
-        contentValues.put(DBHelper.DURATION_KEY, musicData.getDurationString());
-        contentValues.put(DBHelper.MUSIC_NAME_KEY, musicData.getSongName());
         sqLiteDatabase.insert(DBHelper.TB_MUSIC, null, contentValues);
     }
 
@@ -77,14 +78,13 @@ public class DatabaseUtil {
         Cursor cursor = sqLiteDatabase.query(DBHelper.TB_MUSIC, null, null,
                 null, null, null, null);
         ArrayList<MusicData> mainDatas = new ArrayList<>();
+        if (cursor == null) return null;
         while (cursor.moveToNext()) {
-            MusicData musicData = new MusicData();
-            musicData.setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
-            musicData.setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
-            musicData.setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
-            musicData.setDurationString(cursor.getString(cursor.getColumnIndex(DBHelper.DURATION_KEY)));
-            musicData.setSongName(cursor.getString(cursor.getColumnIndex(DBHelper.MUSIC_NAME_KEY)));
-            mainDatas.add(musicData);
+            WeakReference<MusicData> musicDataWeakReference = new WeakReference<>(new MusicData());
+            musicDataWeakReference.get().setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
+            musicDataWeakReference.get().setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
+            musicDataWeakReference.get().setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
+            mainDatas.add(musicDataWeakReference.get());
         }
         cursor.close();
         return mainDatas;
@@ -95,7 +95,6 @@ public class DatabaseUtil {
         contentValues.put(DBHelper.NAME_KEY, fileData.getName());
         contentValues.put(DBHelper.PATH_KEY, fileData.getPath());
         contentValues.put(DBHelper.TYPE_KEY, fileData.getType());
-        contentValues.put(DBHelper.SIZE_KEY, fileData.getSizeDescription());
         sqLiteDatabase.insert(DBHelper.TB_PICTURE, null, contentValues);
     }
 
@@ -103,43 +102,17 @@ public class DatabaseUtil {
         Cursor cursor = sqLiteDatabase.query(DBHelper.TB_PICTURE, null, null,
                 null, null, null, null);
         ArrayList<FileData> mainDatas = new ArrayList<>();
+        if (cursor == null) return null;
         while (cursor.moveToNext()) {
-            FileData fileData = new FileData();
-            fileData.setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
-            fileData.setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
-            fileData.setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
-            fileData.setSizeDescription(cursor.getString(cursor.getColumnIndex(DBHelper.SIZE_KEY)));
-            mainDatas.add(fileData);
+            WeakReference<FileData> pictureDataWeakReference = new WeakReference<>(new FileData());
+            pictureDataWeakReference.get().setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
+            pictureDataWeakReference.get().setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
+            pictureDataWeakReference.get().setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
+            mainDatas.add(pictureDataWeakReference.get());
         }
         cursor.close();
         return mainDatas;
     }
-
-    public void insertFileData(FileData fileData) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DBHelper.NAME_KEY, fileData.getName());
-        contentValues.put(DBHelper.PATH_KEY, fileData.getPath());
-        contentValues.put(DBHelper.TYPE_KEY, fileData.getType());
-        contentValues.put(DBHelper.SIZE_KEY, fileData.getSizeDescription());
-        sqLiteDatabase.insert(DBHelper.TB_FILE, null, contentValues);
-    }
-
-    public List<FileData> getAllFileData() {
-        Cursor cursor = sqLiteDatabase.query(DBHelper.TB_FILE, null, null,
-                null, null, null, null);
-        ArrayList<FileData> mainDatas = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            FileData fileData = new FileData();
-            fileData.setName(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_KEY)));
-            fileData.setPath(cursor.getString(cursor.getColumnIndex(DBHelper.PATH_KEY)));
-            fileData.setType(cursor.getInt(cursor.getColumnIndex(DBHelper.TYPE_KEY)));
-            fileData.setSizeDescription(cursor.getString(cursor.getColumnIndex(DBHelper.SIZE_KEY)));
-            mainDatas.add(fileData);
-        }
-        cursor.close();
-        return mainDatas;
-    }
-
 
     public void insertData(String tbName, BaseData data) {
         ContentValues contentValues = new ContentValues();
@@ -171,11 +144,43 @@ public class DatabaseUtil {
                 new String[]{path + "%"});
         sqLiteDatabase.delete(DBHelper.TB_PICTURE, DBHelper.PATH_KEY + " like ? ",
                 new String[]{path + "%"});
-        sqLiteDatabase.delete(DBHelper.TB_FILE, DBHelper.PATH_KEY + " like ? ",
-                new String[]{path + "%"});
         if (needBroadcast) {
-            mContext.sendBroadcast(new Intent(Constants.PATH_DELETE_ACTION));
+            FileObserverInstance.getInstance().notifyDeleteAction();
         }
+    }
+
+    public void deleteAllData() {
+        sqLiteDatabase.delete(DBHelper.TB_VIDEO, null, null);
+        sqLiteDatabase.delete(DBHelper.TB_MUSIC, null, null);
+        sqLiteDatabase.delete(DBHelper.TB_PICTURE, null, null);
+        FileObserverInstance.getInstance().notifyDeleteAction();
+    }
+
+    public int rawQueryCount(String tableName) {
+        try {
+            int count = 0;
+            Cursor curCount = sqLiteDatabase.rawQuery("select count (_id) from " + tableName, null);
+            while (curCount != null && curCount.moveToNext()) {
+                count = curCount.getInt(0);
+            }
+            curCount.close();
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getVideoCount() {
+        return rawQueryCount(DBHelper.TB_VIDEO);
+    }
+
+    public int getMusicCount() {
+        return rawQueryCount(DBHelper.TB_MUSIC);
+    }
+
+    public int getPictureCount() {
+        return rawQueryCount(DBHelper.TB_PICTURE);
     }
 
     public void closeDatabase() {

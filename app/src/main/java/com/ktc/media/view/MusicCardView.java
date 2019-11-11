@@ -3,6 +3,7 @@ package com.ktc.media.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,13 +54,21 @@ public class MusicCardView extends RelativeLayout {
                 }
             }
         });
+        setOnHoverListener(new OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                requestFocus();
+                requestFocusFromTouch();
+                return true;
+            }
+        });
     }
 
     public void setCountText(int count) {
         if (count < Constants.FILE_LIMIT) {
             countText.setText(String.valueOf(count));
         } else {
-            countText.setText(String.valueOf(Constants.FILE_LIMIT));
+            countText.setText(Constants.FILE_LIMIT + "+");
         }
     }
 

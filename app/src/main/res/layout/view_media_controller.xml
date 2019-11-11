@@ -9,14 +9,18 @@
         android:layout_height="66.7dp"
         android:background="@drawable/media_play_top_background">
 
-        <TextView
+        <com.ktc.media.view.MarqueeTextView
             android:id="@+id/media_play_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="40dp"
             android:textColor="@color/common_text_color"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:duplicateParentState="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"/>
     </RelativeLayout>
 
     <RelativeLayout

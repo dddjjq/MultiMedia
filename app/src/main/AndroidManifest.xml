@@ -14,9 +14,10 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/app"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:largeHeap="true"
+        android:roundIcon="@drawable/app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -32,11 +33,18 @@
 
         <service
             android:name=".scan.ScanService"
-            android:exported="false" />
+            android:exported="false"
+            android:process="com.ktc.media.scan" />
+
+        <service
+            android:name=".scan.FileScanUpdateService"
+            android:exported="false"
+            android:process="com.ktc.media.scan" />
 
         <receiver
             android:name=".scan.DiskReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:process="com.ktc.media.scan">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
@@ -44,14 +52,15 @@
 
                 <data android:scheme="file" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
 
         <activity android:name=".activity.VideoListActivity" />
         <activity android:name=".activity.MusicListActivity" />
         <activity android:name=".activity.PictureListActivity" />
-        <activity android:name=".activity.FileListActivity" />
-
-        <!-- Music broadcast module -->
+        <activity android:name=".activity.FileListActivity" /> <!-- Music broadcast module -->
         <activity
             android:name=".media.music.MusicPlayerActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
@@ -73,9 +82,9 @@
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="file" />
@@ -90,6 +99,7 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="file" />
@@ -99,6 +109,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="com.mstar.android.intent.action.START_LOCAL_MEDIA" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="http" />
@@ -110,7 +121,6 @@
         <service
             android:name=".media.music.MediaService"
             android:enabled="true" />
-
         <service android:name=".media.video.LocalMediaService">
             <intent-filter>
                 <action android:name="com.mstar.android.intent.action.START_MEDIA_BROWSER" />

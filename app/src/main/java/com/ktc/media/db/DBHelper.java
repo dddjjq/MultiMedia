@@ -14,14 +14,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TB_VIDEO = "video";
     public static final String TB_PICTURE = "picture";
     public static final String TB_MUSIC = "music";
-    public static final String TB_FILE = "file";
 
     public static final String PATH_KEY = "path";
     public static final String TYPE_KEY = "type";
     public static final String NAME_KEY = "name";
-    public static final String DURATION_KEY = "duration";
-    public static final String SIZE_KEY = "size";
-    public static final String MUSIC_NAME_KEY = "music_name";
 
     private volatile static DBHelper instance = null;
 
@@ -43,18 +39,15 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_VIDEO = "CREATE TABLE " + TB_VIDEO + "(_id INTEGER PRIMARY key autoincrement,"
-                + "path text," + "type Integer," + "duration text," + " name text)";
+                + "path text," + "type Integer," + " name text)";
         String CREATE_PHOTO = "CREATE TABLE " + TB_PICTURE + "(_id INTEGER PRIMARY key autoincrement,"
-                + "path text," + "type Integer," + "size text," + " name text)";
+                + "path text," + "type Integer," + " name text)";
         String CREATE_MUSIC = "CREATE TABLE " + TB_MUSIC + "(_id INTEGER PRIMARY key autoincrement,"
-                + "path text," + "type Integer," + "duration text," + "music_name text," + " name text)";
-        String CREATE_FILE = "CREATE TABLE " + TB_FILE + "(_id INTEGER PRIMARY key autoincrement,"
-                + "path text," + "type Integer," + "size text," + " name text)";
+                + "path text," + "type Integer," + " name text)";
 
         db.execSQL(CREATE_MUSIC);
         db.execSQL(CREATE_VIDEO);
         db.execSQL(CREATE_PHOTO);
-        db.execSQL(CREATE_FILE);
     }
 
     @Override

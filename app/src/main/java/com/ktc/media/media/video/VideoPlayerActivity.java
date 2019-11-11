@@ -79,8 +79,6 @@
 package com.ktc.media.media.video;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -90,6 +88,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.media.MediaScanner;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -97,7 +96,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.UserHandle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -120,6 +118,7 @@ import com.ktc.media.media.util.BasePlayListTool;
 import com.ktc.media.media.util.ToastFactory;
 import com.ktc.media.media.util.Tools;
 import com.ktc.media.media.view.MediaControllerView;
+import com.ktc.media.media.view.MessageDialog;
 import com.ktc.media.media.view.OnListItemClickListener;
 import com.ktc.media.media.view.VideoListDialog;
 import com.ktc.media.menu.base.BaseMenuActivity;
@@ -136,8 +135,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemClickListener
         , View.OnClickListener, MediaControllerView.OnMediaEventRefreshListener {
@@ -145,8 +142,8 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
     private static final String TAG = "VideoPlayerActivity";
     private static final String LOCAL_MEDIA_SERVICE = "LOCAL_MEDIA_SERVICE";
     // Video buffer progress bar
-    private ProgressDialog progressDialog;
-    private AlertDialog breakPointDialog;
+    private MessageDialog progressDialog;
+    private MessageDialog breakPointDialog;
     // Video control bar to be automatic hidden time
     private static final int DEFAULT_TIMEOUT = 15 * 1000;
     private int playSpeed = 1;
@@ -235,12 +232,12 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                     Log.i(TAG, "RefreshCurrentPositionStatusUI msg.obj:" + (String) msg.obj);
                     videoPlayerHolder.mMediaControllerView.setSeekBarProgress(currentPlayerPosition);
                     videoPlayerHolder.mMediaControllerView.setCurrentTime((String) msg.obj);
-                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 1000);
+                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 500);
                     break;
                 case Constants.SEEK_TIME:
                     videoPlayerHolder.mVideoPlayView.seekTo(mSeekPosition);
                     videoHandler.removeMessages(SEEK_POS);
-                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 1000);
+                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 500);
                     videoPlayerHolder.mMediaControllerView.setPlayPauseStatus(!videoPlayerHolder.mVideoPlayView.isPlaying());
                     seekTimes = 0;
                     break;
@@ -463,12 +460,13 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
         videoHandler.sendEmptyMessageDelayed(Constants.HANDLE_MESSAGE_PLAYER_EXIT, 300);
         Intent intent = new Intent("mtk.intent.action.dolby.exit");
         intent.setPackage("com.mediatek.tv.agent");
-        //sendBroadcastAsUser(intent, UserHandle.CURRENT);
+        sendBroadcastAsUser(intent, UserHandle.CURRENT);
     }
 
     @Override
     protected void onResume() {
         Log.d(TAG, "onResume()");
+        stopMediascanner();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
         filter.addAction(Intent.ACTION_MEDIA_EJECT);
@@ -499,9 +497,9 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                     hideControlDelay();
                     return;
                 } else {
-                    videoHandler.sendEmptyMessageDelayed(Constants.SEEK_TIME, 1000);
+                    videoHandler.sendEmptyMessageDelayed(Constants.SEEK_TIME, 500);
                     videoHandler.removeMessages(SEEK_POS);
-                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 1000);
+                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 500);
                 }
                 hideControlDelay();
             }
@@ -569,7 +567,23 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                         localResumeFromSpeed();
                     }
                 }
+                videoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
                 bRet = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                if (!videoPlayerHolder.mMediaControllerView.mIsControllerShow) {
+                    showController();
+                    hideControlDelay();
+                }
+                isPlaying = videoPlayerHolder.mVideoPlayView.isPlaying();
+                if (!isPlaying) {
+                    localResume(true);
+                } else {
+                    localPause(true);
+                }
+                bRet = true;
+                videoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
+                hideControlDelay();
                 break;
             case KeyEvent.KEYCODE_MEDIA_PAUSE:
                 isPlaying = videoPlayerHolder.mVideoPlayView.isPlaying();
@@ -578,6 +592,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                     localPause(true);
                 }
                 bRet = true;
+                videoPlayerHolder.mMediaControllerView.setPlayPauseFocus();
                 break;
             case KeyEvent.KEYCODE_MEDIA_NEXT:
                 if (isPrepared()) {
@@ -616,9 +631,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                 }
                 videoHandler.sendEmptyMessageDelayed(Constants.HANDLE_MESSAGE_PLAYER_EXIT, 300);
                 bRet = true;
-
                 break;
-
             case KeyEvent.KEYCODE_BACK:
                 if (isMenuShow()) {
                     return super.onKeyDown(keyCode, event);
@@ -697,31 +710,6 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
 
     public boolean isPrepared() {
         return isPrepared;
-    }
-
-    public void showMyToast(final Toast toast, final int cnt) {
-        final Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                toast.show();
-            }
-        }, 0, 3);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    while (!isPlaying && !isFinishing()) {
-                        Log.i(TAG, "waiting....");
-                        Thread.sleep(50);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                toast.cancel();
-                timer.cancel();
-            }
-        }, cnt);
     }
 
     private MediaControllerView.OnControllerClickListener mOnControllerClickListener =
@@ -977,9 +965,11 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
      */
     private void showProgressDialog(int id) {
         if (!isFinishing()) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(getResources().getString(id));
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog = new MessageDialog(this, R.style.MessageDialog);
+            MessageDialog.Builder builder = new MessageDialog.Builder(progressDialog);
+            builder.setMessageText(getResources().getString(id))
+                    .setIsLoading(true)
+                    .setDialogSize(500, 150);
             progressDialog.show();
         }
     }
@@ -1054,7 +1044,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
         playSpeed = 1;
         videoPlayerHolder.mMediaControllerView.setPlayPauseStatus(false);
         videoHandler.removeMessages(SEEK_POS);
-        videoHandler.sendEmptyMessageDelayed(SEEK_POS, 1000);
+        videoHandler.sendEmptyMessageDelayed(SEEK_POS, 500);
         hideControlDelay();
     }
 
@@ -1077,7 +1067,6 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
 
     // show Tip
     public void showToastTip(String strMessage) {
-        ToastFactory.showToast(VideoPlayerActivity.this, strMessage, Gravity.CENTER);
         if (!isVideoSupport && !isAudioSupport) {
             if (mVideoPlayList.size() <= 1) {
                 videoHandler.removeMessages(SEEK_POS);
@@ -1087,6 +1076,11 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                 }
                 videoHandler.sendEmptyMessageDelayed(Constants.HANDLE_MESSAGE_PLAYER_EXIT, 300);
             }
+            videoPlayerHolder.mVideoPlayView.stopPlayback();
+            showErrorDialog(getResources().getString(
+                    R.string.video_media_error_video_unsupport));
+        } else {
+            ToastFactory.showToast(VideoPlayerActivity.this, strMessage, Toast.LENGTH_SHORT);
         }
     }
 
@@ -1105,8 +1099,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
             return;
         }
         String svd = getResources().getString(R.string.video_media_error_video_unsupport);
-        if (strMessage.equals(getResources().getString(R.string.video_media_error_server_died)) ||
-                strMessage.equals(svd)) {
+        if (strMessage.equals(getResources().getString(R.string.video_media_error_server_died))) {
             VideoPlayerActivity.this.finish();
         } else {
             if (!strMessage.equals(getResources().getString(R.string.video_media_info_video_decoder_over_capability))
@@ -1115,7 +1108,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                 String showTip = sName + " " + strMessage + ",\n" + getResources().getString(R.string.video_media_play_next);
                 showErrorDialog(showTip);
             } else {
-                ToastFactory.showToast(VideoPlayerActivity.this, strMessage, Gravity.CENTER);
+                ToastFactory.showToast(VideoPlayerActivity.this, strMessage, Toast.LENGTH_SHORT);
                 VideoPlayerActivity.this.finish();
             }
         }
@@ -1124,30 +1117,31 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
     private void showErrorDialog(final String strMessage) {
         // Prevent activity died when the popup menu
         if (!isFinishing()) {
-            new AlertDialog.Builder(VideoPlayerActivity.this)
-                    .setTitle(getResources().getString(R.string.show_info))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setMessage(strMessage)
-                    .setPositiveButton(getResources().getString(R.string.exit_ok),
-                            new AlertDialog.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dismissProgressDialog();
-                                    if (strMessage.equals(getResources().getString(
-                                            R.string.video_media_error_server_died))) {
-                                        VideoPlayerActivity.this.finish();
-                                    } else {
-                                        moveToNextOrPrevious(1);
-                                    }
-                                }
-                            })
-                    .setNegativeButton(getResources().getString(R.string.exit_cancel),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    VideoPlayerActivity.this.finish();
-                                }
-                            }).setCancelable(false).show();
+            MessageDialog messageDialog = new MessageDialog(this, R.style.MessageDialog);
+            MessageDialog.Builder builder = new MessageDialog.Builder(messageDialog);
+            builder.setMessageText(getResources().getString(R.string.show_info))
+                    .setIsLoading(false)
+                    .setDialogSize(500, 220)
+                    .setContentText(strMessage)
+                    .setButtonClickListener(new MessageDialog.OnDialogButtonClickListener() {
+                        @Override
+                        public void onNegativeClick() {
+                            VideoPlayerActivity.this.finish();
+                        }
+
+                        @Override
+                        public void onPositiveClick() {
+                            dismissProgressDialog();
+                            if (strMessage.equals(getResources().getString(
+                                    R.string.video_media_error_server_died))) {
+                                VideoPlayerActivity.this.finish();
+                            } else {
+                                moveToNextOrPrevious(1);
+                            }
+                        }
+                    });
+            dismissProgressDialog();
+            messageDialog.show();
         }
     }
 
@@ -1199,6 +1193,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
     public VideoPlayView.playerCallback myPlayerCallback = new VideoPlayView.playerCallback() {
         @Override
         public boolean onError(MediaPlayer mp, int framework_err, int impl_err) {
+            Log.d("dingyl", "onError");
             if (mLocalMediaController != null) {
                 mLocalMediaController.onError(framework_err, impl_err);
             }
@@ -1270,7 +1265,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                     Log.i(TAG, "MEDIA_INFO_VIDEO_UNSUPPORT");
                     isPrepared = true;
                     isVideoSupport = false;
-                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 1000);
+                    videoHandler.sendEmptyMessageDelayed(SEEK_POS, 500);
                     showToastTip(getResources().getString(
                             R.string.video_media_error_video_unsupport));
                     isVideoNone = true;
@@ -1306,7 +1301,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
             if (width == 0 || height == 0) {
                 isVideoSupport = false;
                 isPrepared = true;
-                videoHandler.sendEmptyMessageDelayed(SEEK_POS, 1000);
+                videoHandler.sendEmptyMessageDelayed(SEEK_POS, 500);
                 isVideoNone = true;
             }
             if (mLocalMediaController != null) {
@@ -1349,54 +1344,60 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
     };
 
     private void breakPointPlay(final String path) {
+        if (!isAudioSupport && !isVideoSupport) {
+            return;
+        }
         isBreakPointPlay = false;
         videoHandler.sendEmptyMessageDelayed(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT, 5000);
-        breakPointDialog = new AlertDialog.Builder(this)
-                .setTitle(getResources().getString(R.string.video_breakpoint_play))
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setPositiveButton(getResources().getString(R.string.exit_ok),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                videoHandler
-                                        .removeMessages(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT);
-                                isBreakPointPlay = true;
-                            }
-                        })
-                .setNegativeButton(getResources().getString(R.string.exit_cancel),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                videoHandler
-                                        .removeMessages(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT);
-                                isBreakPointPlay = false;
-                            }
-                        }).setOnCancelListener(new OnCancelListener() {
+        breakPointDialog = new MessageDialog(this, R.style.MessageDialog);
+        MessageDialog.Builder builder = new MessageDialog.Builder(breakPointDialog);
+        builder.setMessageText(getResources().getString(R.string.video_breakpoint_play))
+                .setIsLoading(false)
+                .setDialogSize(500, 180)
+                .setButtonClickListener(new MessageDialog.OnDialogButtonClickListener() {
                     @Override
-                    public void onCancel(DialogInterface arg0) {
-                        videoHandler.removeMessages(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT);
+                    public void onNegativeClick() {
+                        videoHandler
+                                .removeMessages(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT);
                         isBreakPointPlay = false;
                     }
-                }).setOnDismissListener(new OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface arg0) {
-                        if (path != null) {
-                            videoPlayerHolder.mVideoPlayView.setVideoPath(path);
-                        }
-                    }
-                }).setOnKeyListener(new DialogInterface.OnKeyListener() {
-                    @Override
-                    public boolean onKey(DialogInterface arg0, int arg1, KeyEvent arg2) {
-                        if (KeyEvent.KEYCODE_MEDIA_PLAY == arg1
-                                || KeyEvent.KEYCODE_MEDIA_PAUSE == arg1
-                                || KeyEvent.KEYCODE_MEDIA_NEXT == arg1
-                                || KeyEvent.KEYCODE_MEDIA_PREVIOUS == arg1) {
-                            return true;
-                        }
-                        return false;
-                    }
-                }).show();
 
+                    @Override
+                    public void onPositiveClick() {
+                        videoHandler
+                                .removeMessages(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT);
+                        isBreakPointPlay = true;
+                    }
+                });
+        breakPointDialog.setCancelable(true);
+        breakPointDialog.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                videoHandler.removeMessages(Constants.HANDLE_MESSAGE_SKIP_BREAKPOINT);
+                isBreakPointPlay = false;
+            }
+        });
+        breakPointDialog.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (path != null) {
+                    videoPlayerHolder.mVideoPlayView.setVideoPath(path);
+                }
+            }
+        });
+        breakPointDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (KeyEvent.KEYCODE_MEDIA_PLAY == keyCode
+                        || KeyEvent.KEYCODE_MEDIA_PAUSE == keyCode
+                        || KeyEvent.KEYCODE_MEDIA_NEXT == keyCode
+                        || KeyEvent.KEYCODE_MEDIA_PREVIOUS == keyCode) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        breakPointDialog.show();
     }
 
     public boolean isVideoSupport() {
@@ -1426,6 +1427,14 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
         playSpeed = 1;
         hideControlDelay();
         videoHandler.sendEmptyMessage(SEEK_POS);
+    }
+
+    public void stopMediascanner() {
+        MediaScanner.stopMediaScanner();
+    }
+
+    public void startMediascanner() {
+        MediaScanner.startMediaScanner();
     }
 
     private void exitPlayer() {
@@ -1492,10 +1501,7 @@ public class VideoPlayerActivity extends BaseMenuActivity implements OnListItemC
                     // Avoid activity is lost player anomaly to upper send
                     // anomaly Lead to error when showErrorDialog
                     exitPlayer();
-                    Toast toast = Toast.makeText(VideoPlayerActivity.this, R.string.disk_eject,
-                            Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    ToastFactory.showToast(VideoPlayerActivity.this, getString(R.string.disk_eject), Toast.LENGTH_SHORT);
                     videoHandler.sendEmptyMessage(Constants.HANDLE_MESSAGE_PLAYER_EXIT);
                 }
             }

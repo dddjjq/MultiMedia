@@ -20,6 +20,7 @@ import com.ktc.media.adapter.FileLinearListAdapter;
 import com.ktc.media.base.BaseActivity;
 import com.ktc.media.constant.Constants;
 import com.ktc.media.data.FileDataManager;
+import com.ktc.media.data.ThreadPoolManager;
 import com.ktc.media.media.music.MusicPlayerActivity;
 import com.ktc.media.media.photo.ImagePlayerActivity;
 import com.ktc.media.media.video.VideoPlayerActivity;
@@ -27,6 +28,7 @@ import com.ktc.media.model.BaseData;
 import com.ktc.media.model.DiskData;
 import com.ktc.media.model.FileData;
 import com.ktc.media.util.DestinyUtil;
+import com.ktc.media.util.ExecutorUtil;
 import com.ktc.media.util.SpaceItemDecoration;
 import com.ktc.media.view.FileListContainer;
 import com.ktc.media.view.KeyboardView;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FileListActivity extends BaseActivity implements OnItemFocusListener
         , View.OnClickListener, KeyboardView.OnTextChangeListener, OnItemClickListener {
@@ -69,6 +73,7 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
     private Stack<String> pathStack;
     private Stack<Integer> beforePosition; //进入前上一级的data
     private Stack<List<FileData>> fileDataListStack;
+    private ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
 
     @Override
     public int getLayoutId() {
@@ -90,6 +95,7 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
         emptyImage = (ImageView) findViewById(R.id.media_empty_image);
         keyboardView.setEnabled(false);
         changeLeftImageBtnVisible(false);
+        fileListView.setHasFixedSize(true);
     }
 
     @Override
@@ -102,23 +108,32 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
         pathStack.push(currentPath);
         titleText.setText(currentDiskData.getName());
         mDataList = getIntent().getParcelableArrayListExtra(currentPath);
-        if (mDataList == null || mDataList.size() == 0) {
-            mDataList = FileDataManager.getInstance(this).getPathFileData(currentDiskData.getPath());
+        if (mDataList == null) {
+            mDataList = new ArrayList<>();
+        } else {
+            fileDataListStack.push(new ArrayList<>(mDataList));
+            changeEmptyStatus(mDataList, false);
+            subtitleRightText.setText(getString(R.string.str_file_list_count, mDataList.size()));
         }
-        fileDataListStack.push(new ArrayList<>(mDataList));
         mFileLinearListAdapter = new FileLinearListAdapter(this, mDataList);
         mFileGridListAdapter = new FileGridListAdapter(this, mDataList);
-        subtitleRightText.setText(getString(R.string.str_file_list_count, mDataList.size()));
         setLinearAdapter();
-        changeEmptyStatus(mDataList, false);
+        if (mDataList == null || mDataList.size() == 0) {
+            updateDataList(currentDiskData.getPath(), true);
+        }
     }
 
     @Override
     public void initFocus() {
         fileListView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
-            public void onChildViewAttachedToWindow(@NonNull View view) {
-                view.requestFocus();
+            public void onChildViewAttachedToWindow(@NonNull final View view) {
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.requestFocus();
+                    }
+                }, 200);
                 mListContainer.setNewFocus(view);
                 fileListView.removeOnChildAttachStateChangeListener(this);
             }
@@ -154,13 +169,21 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
     }
 
     @Override
-    public void handleDataIntent(Intent intent) {
-        String action = intent.getAction();
-        if (action == null) return;
-        if (action.equals(Constants.ALL_REFRESH_ACTION)
-                || action.equals(Constants.PATH_DELETE_ACTION)) {
-            refreshList(currentPath);
+    public void handleUpdate(String type) {
+        if (type.equals(Constants.ALL_REFRESH_ACTION)
+                || type.equals(Constants.PATH_DELETE_ACTION)) {
+            updateDataList(currentPath, false);
         }
+    }
+
+    @Override
+    public void blockFocus() {
+
+    }
+
+    @Override
+    public void releaseFocus() {
+
     }
 
     @Override
@@ -179,9 +202,11 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
 
     @Override
     public void onItemFocusChange(View view, boolean hasFocus, BaseData data) {
-        if (data.getPath().contains(pathStack.peek())) {
-            currentLeftTitle = getPathDescription(data.getPath());
-            if (!isKeyboardVisible) subtitleLeftText.setText(currentLeftTitle);
+        if (pathStack.size() > 0) {
+            if (data.getPath().contains(pathStack.peek())) {
+                currentLeftTitle = getPathDescription(data.getPath());
+                if (!isKeyboardVisible) subtitleLeftText.setText(currentLeftTitle);
+            }
         }
     }
 
@@ -199,6 +224,13 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
                 beforeRefocus();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ExecutorUtil.shutdownAndAwaitTermination(mExecutorService);
+        mFileLinearListAdapter.release();
     }
 
     //上一级重新获取焦点
@@ -245,9 +277,26 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
         changeEmptyStatus(mDataList, false);
     }
 
-    private void refreshList(String path) {
-        mDataList.clear();
-        mDataList.addAll(FileDataManager.getInstance(this).getPathFileData(path));
+    private void updateDataList(final String path, final boolean needPush) {
+        mExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDataList.clear();
+                mDataList.addAll(FileDataManager.getInstance(FileListActivity.this).getPathFileDataWithOutSize(path));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshList();
+                        if (needPush) {
+                            fileDataListStack.push(new ArrayList<>(mDataList));
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void refreshList() {
         if (isCurrentLinear) {
             fileListView.setAdapter(mFileLinearListAdapter);
             mFileLinearListAdapter.notifyDataSetChanged();
@@ -255,11 +304,11 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
             fileListView.setAdapter(mFileGridListAdapter);
             mFileGridListAdapter.notifyDataSetChanged();
         }
+        changeEmptyStatus(mDataList, false);
         if (isKeyboardVisible) {
             subtitleLeftText.setText(getString(R.string.str_file_list_count, mDataList.size()));
         }
         subtitleRightText.setText(getString(R.string.str_file_list_count, mDataList.size()));
-        changeEmptyStatus(mDataList, false);
     }
 
     private void changeKeyboardStatus(boolean isVisible) {
@@ -269,7 +318,7 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
         changeLeftImageBtnVisible(!isVisible);
         adjustFlyBoardView(300);//重新调整飞框
         startKeyboardAnimation(isVisible);
-        if (!isVisible) refreshList(currentPath);
+        if (!isVisible) updateDataList(currentPath, false);
         clearKeyboard();
     }
 
@@ -421,7 +470,7 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
         if (TextUtils.isEmpty(s)) {
             mFileLinearListAdapter.setSpanText(null);
             mFileGridListAdapter.setSpanText(null);
-            refreshList(currentPath);
+            updateDataList(currentPath, false);
         } else {
             refreshListFromSearch(s);
         }
@@ -429,7 +478,6 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
 
     private void refreshListFromSearch(String s) {
         mDataList.clear();
-        mDataList.addAll(FileDataManager.getInstance(this).getAllFileData(currentDiskData.getPath()));
         Iterator<FileData> fileDataIterator = mDataList.iterator();
         while (fileDataIterator.hasNext()) {
             FileData fileData = fileDataIterator.next();
@@ -462,10 +510,10 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
                 }
                 currentPath = data.getPath();
                 pathStack.push(currentPath);
-                refreshList(currentPath);
-                fileDataListStack.push(new ArrayList<>(mDataList));
+                updateDataList(currentPath, true);
+                //fileDataListStack.push(new ArrayList<>(mDataList));
                 initFocus();
-                adjustFlyBoardView(0);
+                //adjustFlyBoardView(100);
             }
             startMediaPlayer(data);
         } else if (view instanceof MediaGridItemView) {
@@ -478,10 +526,10 @@ public class FileListActivity extends BaseActivity implements OnItemFocusListene
                 }
                 currentPath = data.getPath();
                 pathStack.push(currentPath);
-                refreshList(currentPath);
-                fileDataListStack.push(new ArrayList<>(mDataList));
+                updateDataList(currentPath, true);
+                //fileDataListStack.push(new ArrayList<>(mDataList));
                 initFocus();
-                adjustFlyBoardView(0);
+                //adjustFlyBoardView(100);
             }
             startMediaPlayer(data);
         }

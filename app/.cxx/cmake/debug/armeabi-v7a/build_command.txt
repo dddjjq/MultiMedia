@@ -1,0 +1,14 @@
+Executable : E:\android_studio_sdk\cmake\3.6.4111459\bin\cmake.exe
+arguments : 
+-HF:\KTC_CODE\MT9632Debug\KTCMedia_as\app
+-BF:\KTC_CODE\MT9632Debug\KTCMedia_as\app\.cxx\cmake\debug\armeabi-v7a
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_PLATFORM=android-26
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=F:\KTC_CODE\MT9632Debug\KTCMedia_as\app\build\intermediates\cmake\debug\obj\armeabi-v7a
+-DCMAKE_BUILD_TYPE=Debug
+-DANDROID_NDK=E:\android_studio_sdk\ndk\20.1.5948944
+-DCMAKE_TOOLCHAIN_FILE=E:\android_studio_sdk\ndk\20.1.5948944\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=E:\android_studio_sdk\cmake\3.6.4111459\bin\ninja.exe
+-GAndroid Gradle - Ninja
+jvmArgs : 
+

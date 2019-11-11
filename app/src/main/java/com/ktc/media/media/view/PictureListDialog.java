@@ -92,6 +92,18 @@ public class PictureListDialog extends Dialog implements OnListItemClickListener
         }
     }
 
+    public void skipToNextOrBeforeThumb(int delta) {
+        currentPosition += delta;
+        mRecyclerView.scrollToPosition(currentPosition);
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            View newView = layoutManager.findViewByPosition(currentPosition);
+            if (newView != null) {
+                newView.requestFocus();
+            }
+        }
+    }
+
     public void setOnListItemClickListener(OnListItemClickListener onListItemClickListener) {
         mOnListItemClickListener = onListItemClickListener;
     }

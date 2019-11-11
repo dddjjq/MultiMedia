@@ -9,10 +9,16 @@ public class Tools {
     }
 
     public static int getMediaDuration(String videoPath) {
-        MediaMetadataRetriever media = new MediaMetadataRetriever();
-        media.setDataSource(videoPath);
-        String duration = media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION); //
-        return Integer.parseInt(duration);
+        try {
+            MediaMetadataRetriever media = new MediaMetadataRetriever();
+            media.setDataSource(videoPath);
+            String duration = media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            if (duration == null) return 0;
+            return Integer.parseInt(duration);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public static String formatDuration(int duration) {

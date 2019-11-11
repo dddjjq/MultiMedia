@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -79,6 +80,14 @@ public class MediaLinearItemView extends RelativeLayout {
                 }
             }
         });
+        setOnHoverListener(new OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                requestFocus();
+                requestFocusFromTouch();
+                return true;
+            }
+        });
     }
 
     public void setSpanText(String text) {
@@ -103,7 +112,7 @@ public class MediaLinearItemView extends RelativeLayout {
             title.setMaxWidth(DestinyUtil.dp2px(getContext(), 516));
         } else {
             content.setVisibility(VISIBLE);
-            title.setMaxWidth(DestinyUtil.dp2px(getContext(), 650));
+            title.setMaxWidth(DestinyUtil.dp2px(getContext(), 620));
         }
     }
 

@@ -89,7 +89,6 @@ import android.util.Log;
 
 import com.ktc.media.MainApplication;
 import com.ktc.media.R;
-import com.ktc.media.constant.Constants;
 
 import org.mozilla.universalchardet.UniversalDetector;
 

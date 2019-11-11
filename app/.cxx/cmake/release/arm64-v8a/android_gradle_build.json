@@ -1,0 +1,38 @@
+
+{
+	"buildFiles" : [ "F:/KTC_CODE/MT9632Debug/KTCMedia_as/app/CMakeLists.txt" ],
+	"cleanCommands" : 
+	[
+		"E:\\android_studio_sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\release\\arm64-v8a --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"FileScanner-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "FileScanner",
+			"buildCommand" : "E:\\android_studio_sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build F:\\KTC_CODE\\MT9632Debug\\KTCMedia_as\\app\\.cxx\\cmake\\release\\arm64-v8a --target FileScanner",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=aarch64-none-linux-android26 --gcc-toolchain=E:/android_studio_sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=E:/android_studio_sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DFileScanner_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security   -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "F:/KTC_CODE/MT9632Debug/KTCMedia_as/app/src/main/jni/FileScanner.cpp",
+					"workingDirectory" : "F:/KTC_CODE/MT9632Debug/KTCMedia_as/app/.cxx/cmake/release/arm64-v8a"
+				}
+			],
+			"output" : "F:/KTC_CODE/MT9632Debug/KTCMedia_as/app/build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so",
+			"toolchain" : "295597227"
+		}
+	},
+	"toolchains" : 
+	{
+		"295597227" : 
+		{
+			"cCompilerExecutable" : "E:/android_studio_sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe",
+			"cppCompilerExecutable" : "E:/android_studio_sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe"
+		}
+	}
+}

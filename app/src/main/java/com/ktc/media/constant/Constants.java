@@ -19,7 +19,7 @@ public class Constants {
     public static final int FILE_TYPE_TXT = 0x9;
     public static final int FILE_TYPE_XLS = 0xA;
     public static final int FILE_TYPE_APK = 0xB;
-    public static final int FILE_TYPE_UNKNOW = 0xC;
+    public static final int FILE_TYPE_UNKNOWN = 0xC;
 
     public static final String VIDEO_REFRESH_ACTION = "com.ktc.media.video.refresh";
     public static final String MUSIC_REFRESH_ACTION = "com.ktc.media.music.refresh";

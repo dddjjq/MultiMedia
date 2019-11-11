@@ -37,7 +37,7 @@ public class ImageMajorHolder extends BaseEntityHolder {
     public void init() {
         initInfoEntity();
         initPictureModeEntity();
-        initSettingEntity();
+        //initSettingEntity();
         initPPTDurationEntity();
         initRepeatEntity();
     }

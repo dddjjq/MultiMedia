@@ -78,11 +78,9 @@
 package com.ktc.media.media.music;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -106,7 +104,6 @@ import android.os.RemoteException;
 import android.provider.MediaStore.Audio;
 import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -124,6 +121,7 @@ import com.ktc.media.data.FileDataManager;
 import com.ktc.media.media.util.MusicUtils;
 import com.ktc.media.media.util.ToastFactory;
 import com.ktc.media.media.util.Tools;
+import com.ktc.media.media.view.MessageDialog;
 import com.ktc.media.media.view.MusicListDialog;
 import com.ktc.media.media.view.OnListItemClickListener;
 import com.ktc.media.menu.base.BaseMenuActivity;
@@ -345,7 +343,7 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
             if (strMessage.equals(getResources().getString(R.string.video_media_error_audio_unsupport))) {
                 isAudioSupport = false;
                 ToastFactory.showToast(MusicPlayerActivity.this, strMessage,
-                        Gravity.CENTER);
+                        Toast.LENGTH_SHORT);
             }
             if (!isVideoSupport && !isAudioSupport) {
                 if (musicList.size() <= 1) {
@@ -486,6 +484,12 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
         registerReceiver(sourceChangeReceiver, sourceChange);
         stToken = MusicUtils.bindToService(MusicPlayerActivity.this,
                 musicServiceConnection);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                queryCurrentMusicExtraInfo();
+            }
+        }).start();
     }
 
     @Override
@@ -904,6 +908,7 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
         }
         if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
             if (currentPlayStatus == PLAY_PAUSE) {
+                mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseFocus();
                 mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseStatus(false);
                 continuing();
             }
@@ -913,6 +918,19 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
             Log.i(TAG, "keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE");
             if (currentPlayStatus == PLAY_PLAY) {
                 Log.i(TAG, "keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE2");
+                mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseFocus();
+                mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseStatus(true);
+                pause();
+            }
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+            if (currentPlayStatus == PLAY_PAUSE) {
+                mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseFocus();
+                mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseStatus(false);
+                continuing();
+            } else {
+                mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseFocus();
                 mMusicPlayerViewHolder.mMediaControllerView.setPlayPauseStatus(true);
                 pause();
             }
@@ -1049,10 +1067,7 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
         String sName = musicList.get(currentPosition).getPath();
         String showTip = sName + " " + strMessage + ",\n" + getResources().getString(R.string.music_media_play_next);
         if (musicList.size() <= 1) {
-            Toast toast = Toast.makeText(MusicPlayerActivity.this,
-                    sName + " " + strMessage, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            ToastFactory.showToast(MusicPlayerActivity.this, sName + " " + strMessage, Toast.LENGTH_SHORT);
             exitMusicPlay();
         } else {
             showErrorDialog(showTip);
@@ -1063,33 +1078,33 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
     private void showErrorDialog(final String strMessage) {
         // Prevent activity died when the popup menu
         if (!isFinishing()) {
-            new AlertDialog.Builder(MusicPlayerActivity.this)
-                    .setTitle(getResources().getString(R.string.show_info))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setMessage(strMessage)
-                    .setPositiveButton(getResources().getString(R.string.exit_ok),
-                            new AlertDialog.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    isErrorDialogShow = false;
-                                    if (strMessage.equals(getResources().getString(
-                                            R.string.video_media_error_server_died))) {
-                                        Log.i(TAG, "finish()[5]");
-                                        MusicPlayerActivity.this.finish();
-                                    } else {
-                                        processPlayCompletion();
-                                    }
-                                }
-                            })
-                    .setNegativeButton(getResources().getString(R.string.exit_cancel),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    isErrorDialogShow = false;
-                                    Log.i(TAG, "finish()[6]");
-                                    MusicPlayerActivity.this.finish();
-                                }
-                            }).setCancelable(false).show();
+            MessageDialog messageDialog = new MessageDialog(this, R.style.MessageDialog);
+            MessageDialog.Builder builder = new MessageDialog.Builder(messageDialog);
+            builder.setMessageText(getResources().getString(R.string.show_info))
+                    .setIsLoading(false)
+                    .setDialogSize(500, 300)
+                    .setContentText(strMessage)
+                    .setButtonClickListener(new MessageDialog.OnDialogButtonClickListener() {
+                        @Override
+                        public void onNegativeClick() {
+                            isErrorDialogShow = false;
+                            Log.i(TAG, "finish()[6]");
+                            MusicPlayerActivity.this.finish();
+                        }
+
+                        @Override
+                        public void onPositiveClick() {
+                            isErrorDialogShow = false;
+                            if (strMessage.equals(getResources().getString(
+                                    R.string.video_media_error_server_died))) {
+                                Log.i(TAG, "finish()[5]");
+                                MusicPlayerActivity.this.finish();
+                            } else {
+                                processPlayCompletion();
+                            }
+                        }
+                    });
+            messageDialog.show();
             isErrorDialogShow = true;
         }
     }
@@ -1233,14 +1248,17 @@ public class MusicPlayerActivity extends BaseMenuActivity implements OnListItemC
             String devicePath = intent.getDataString().substring(7);
             Log.d(TAG, "DiskChangeReceiver: " + action);
             if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
-                // Disk remove
                 Log.i(TAG, "mMusicListDevicePath:" + mMusicListDevicePath);
                 if (mMusicListDevicePath != null && mMusicListDevicePath.contains(devicePath)) {
-                    Toast toast = Toast.makeText(MusicPlayerActivity.this,
-                            R.string.disk_eject, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                    Log.i(TAG, "finish()[7]");
+                    ToastFactory.showToast(MusicPlayerActivity.this, getString(R.string.disk_eject)
+                            , Toast.LENGTH_SHORT);
+                    if (mService != null) {
+                        try {
+                            mService.stop();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     MusicPlayerActivity.this.finish();
                 }
             }

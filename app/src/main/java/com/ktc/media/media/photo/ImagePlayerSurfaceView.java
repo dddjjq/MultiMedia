@@ -296,7 +296,7 @@ public class ImagePlayerSurfaceView extends SurfaceView implements
         if (mCurrentMediaPlayerState == MEDIA_PLAYER_STATE_IDLE ||
                 mCurrentMediaPlayerState == MEDIA_PLAYER_STATE_PREPARING
                 || Constants.bReleasingPlayer
-                ) {
+        ) {
             return;
         }
         stopTaskExecutor();
@@ -825,7 +825,10 @@ public class ImagePlayerSurfaceView extends SurfaceView implements
                 }
                 scaleFactor = sampleSize / initialSize;
             }
-
+            if (sampleSize == 1) {
+                scaleFactor = Math.min((double) mSurfaceWidth / (double) imgWidth,
+                        (double) mSurfaceHeight / (double) imgHeight);
+            }
             MMediaPlayer.InitParameter initParameter = mMMediaPlayer.new InitParameter();
             initParameter.degrees = 0;
             initParameter.scaleX = (float) scaleFactor;
@@ -1055,7 +1058,7 @@ public class ImagePlayerSurfaceView extends SurfaceView implements
     }
 
     private void showToast(final String text, int gravity, int duration) {
-        ToastFactory.showToast(mImagePlayerActivity, text, gravity);
+        ToastFactory.showToast(mImagePlayerActivity, text, duration);
     }
 
     private void adjustSurfaceSize() {

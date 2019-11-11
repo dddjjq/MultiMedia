@@ -1,0 +1,27 @@
+# ninja log v5
+39	1584	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+1585	3086	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	249	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+249	870	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	894	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+894	1531	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	915	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+915	1574	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	1077	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+1077	1903	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	1002	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+1002	3677	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	978	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+979	3520	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	950	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+950	1478	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+1	990	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+990	3575	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	346	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+346	934	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+1	279	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+279	865	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	285	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+285	1070	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750
+2	980	0	CMakeFiles/FileScanner.dir/src/main/jni/FileScanner.cpp.o	a5b0b524b4dbd5f8
+980	1533	0	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libFileScanner.so	3f2b1571f8d9750

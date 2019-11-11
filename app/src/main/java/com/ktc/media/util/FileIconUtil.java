@@ -31,7 +31,7 @@ public class FileIconUtil {
                 return resId[8];
             case Constants.FILE_TYPE_XLS:
                 return resId[9];
-            case Constants.FILE_TYPE_UNKNOW:
+            case Constants.FILE_TYPE_UNKNOWN:
                 return resId[10];
         }
         return resId[10];
